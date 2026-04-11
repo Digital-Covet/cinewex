@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useRef } from "react";
 import { Footer } from "./common/Footer";
 import { Navigation } from "./common/Navigation";
 import HeadlineSection from "./sections/HeadlineSection";
@@ -45,23 +45,26 @@ const LoadingFallback: React.FC = () => (
 );
 
 const CinewexLanding: React.FC = () => {
+  const mainRef = useRef<HTMLElement>(null);
+
   return (
-    <div className="selection:bg-primary-container selection:text-on-primary-container overflow-x-clip">
+    <div className="selection:bg-primary-container selection:text-on-primary-container overflow-x-clip flex flex-col h-screen">
       <Navigation />
 
-      <main>
+      <main
+        ref={mainRef}
+        className="flex-1 overflow-y-auto snap-y snap-mandatory"
+      >
         <HeroSection />
         <Suspense fallback={<LoadingFallback />}>
           <HeadlineSection />
           <RealitySliderSection />
           <PortfolioSection />
-          <WorkflowSection />
+          <WorkflowSection containerRef={mainRef} />
           <TestimonialsSection />
           <CTASection />
         </Suspense>
       </main>
-
-      <Footer />
     </div>
   );
 };
