@@ -1,6 +1,6 @@
-import { Button } from "@base-ui/react/button";
 import { NavigationMenu } from "@base-ui/react/navigation-menu";
 import Image from "next/image";
+import Link from "next/link";
 import { memo } from "react";
 import { NAVIGATION_LINKS } from "@/constants/landing/navigation";
 
@@ -32,9 +32,12 @@ export const Navigation = memo(() => {
             ))}
           </NavigationMenu.List>
         </NavigationMenu.Root>
-        <Button className="btn-primary-gradient text-white px-5 py-2 font-headline font-bold uppercase tracking-widest text-[10px] transition-all">
+        <Link
+          href="https://digitalcovet.com/contact-us/"
+          className="btn-primary-gradient text-white px-5 py-2 font-headline font-bold uppercase tracking-widest text-[10px] transition-all"
+        >
           Get Started
-        </Button>
+        </Link>
       </div>
     </nav>
   );

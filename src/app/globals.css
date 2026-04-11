@@ -79,7 +79,13 @@
 @utility font-headline {
   font-family: var(--font-headline);
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
 /* Glass panel */
 @utility glass-panel {
   background: rgba(26, 26, 36, 0.4);

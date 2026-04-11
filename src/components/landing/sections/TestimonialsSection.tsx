@@ -13,7 +13,7 @@ export const TestimonialsSection = memo(() => {
   );
 
   return (
-    <section className="py-32 bg-zinc-950/50 overflow-hidden border-y border-white/5">
+    <section className="min-h-screen py-32 bg-zinc-950/50 overflow-hidden border-y border-white/5 snap-start">
       <MarqueeScroll items={CLIENT_BRANDS} renderItem={renderClientBrand} />
 
       <div className="max-w-5xl mx-auto px-8 mt-32 text-center">

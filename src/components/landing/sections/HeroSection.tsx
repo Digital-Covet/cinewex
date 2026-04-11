@@ -1,11 +1,12 @@
 import { Button } from "@base-ui/react/button";
 import { ChevronsDown } from "lucide-react";
+import Link from "next/link";
 import { memo } from "react";
 import Orb from "@/components/ui/Orb";
 
 export const HeroSection = memo(() => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 snap-start">
       {/* Changed: removed -z-10, kept absolute positioning */}
       <div className="absolute inset-0 pointer-events-auto">
         <Orb
@@ -27,9 +28,12 @@ export const HeroSection = memo(() => {
           <span className="text-gradient">UNPRECEDENTED SPEED</span>
         </h1>
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center pointer-events-auto">
-          <Button className="btn-primary-gradient text-white px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all">
+          <Link
+            href="https://digitalcovet.com/contact-us/"
+            className="btn-primary-gradient text-white px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all"
+          >
             Start Your Campaign
-          </Button>
+          </Link>
           <Button className="glass-panel text-white hover:bg-white/10 px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all">
             View Our Reel
           </Button>

@@ -1,13 +1,19 @@
 import { memo } from "react";
 import type { WorkflowStep } from "@/types/landing";
 import { Button } from "../common/Button";
+import Stack from "@/components/ui/Stack";
 
 interface WorkflowStateCardProps {
   readonly step: WorkflowStep;
   readonly isActive: boolean;
   readonly direction: "prev" | "current" | "next";
 }
-
+const images = [
+  "https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?q=80&w=500&auto=format",
+  "https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=500&auto=format",
+  "https://images.unsplash.com/photo-1452626212852-811d58933cae?q=80&w=500&auto=format",
+  "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?q=80&w=500&auto=format",
+];
 export const WorkflowStateCard = memo<WorkflowStateCardProps>(
   ({ step, isActive, direction }) => {
     const getTransformClass = (): string => {
@@ -58,13 +64,27 @@ export const WorkflowStateCard = memo<WorkflowStateCardProps>(
                 {step.description}
               </p>
             </div>
-            <div className="relative rounded-xl overflow-hidden border border-white/10 group">
-              <img
-                alt="Storyboard concept art"
-                className="w-full h-full object-cover grayscale opacity-50"
-                src={step.imagePath}
+            <div className="grayscale overflow-hidden">
+              <Stack
+                randomRotation={false}
+                sensitivity={200}
+                sendToBackOnClick={true}
+                cards={images.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`card-${i + 1}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ))}
+                autoplay
+                autoplayDelay={2000}
+                pauseOnHover={false}
               />
-              <div className="absolute inset-0 bg-cyan-500/10 mix-blend-color" />
             </div>
           </div>
         </div>
@@ -75,10 +95,12 @@ export const WorkflowStateCard = memo<WorkflowStateCardProps>(
       <div
         className={`workflow-state absolute inset-0 flex items-center justify-center p-0 transition-all duration-700 ${getTransformClass()}`}
       >
-        <img
-          alt="Final rendered cinematic scene"
+        <video
+          muted
+          loop
+          autoPlay
           className="w-full h-full object-cover"
-          src={step.imagePath}
+          src="https://v.ftcdn.net/16/63/73/74/700_F_1663737442_kwznre7yzLZp2d6KLgyS1oM8EQJYLDs9_ST.mp4"
         />
         <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
           <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl text-center">

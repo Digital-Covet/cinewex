@@ -6,13 +6,19 @@ import Link from "next/link";
 import { memo, useState } from "react";
 import { FOOTER_LINKS } from "@/constants/landing/navigation";
 
-export const Footer = memo(() => {
+interface FooterProps {
+  className?: string;
+}
+
+export const Footer = memo<FooterProps>(({ className = "" }) => {
   const [isShared, setIsShared] = useState(false);
 
   return (
-    <footer className="bg-[#0A0A0C] py-20 border-t border-white/5">
-      <div className="max-w-screen-2xl mx-auto px-12 grid grid-cols-1 md:grid-cols-3 gap-16 items-center">
-        <div className="flex flex-col gap-4 text-center md:text-left ">
+    <footer
+      className={`bg-[#0A0A0C] py-12 border-t border-white/5 ${className}`}
+    >
+      <div className="max-w-screen-2xl mx-auto px-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+        <div className="flex flex-col gap-4 text-center md:text-left">
           <Image
             src="/cinewex.svg"
             alt="Cinewex Logo"

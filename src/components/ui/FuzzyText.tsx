@@ -22,6 +22,21 @@ interface FuzzyTextProps {
   className?: string;
 }
 
+const extractTextContent = (children: React.ReactNode): string => {
+  if (typeof children === "string") return children;
+  if (typeof children === "number") return children.toString();
+  if (Array.isArray(children)) {
+    return children.map(extractTextContent).join(" ");
+  }
+  if (
+    React.isValidElement(children) &&
+    children.props?.children !== undefined
+  ) {
+    return extractTextContent(children.props.children);
+  }
+  return "";
+};
+
 const FuzzyText: React.FC<FuzzyTextProps> = ({
   children,
   fontSize = "clamp(2rem, 8vw, 8rem)",
@@ -88,7 +103,7 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
         document.body.removeChild(temp);
       }
 
-      const text = React.Children.toArray(children).join("");
+      const text = extractTextContent(children);
 
       const offscreen = document.createElement("canvas");
       const offCtx = offscreen.getContext("2d");
@@ -134,9 +149,9 @@ const FuzzyText: React.FC<FuzzyTextProps> = ({
 
       if (gradient && Array.isArray(gradient) && gradient.length >= 2) {
         const grad = offCtx.createLinearGradient(0, 0, offscreenWidth, 0);
-        gradient.forEach((c, i) =>
-          grad.addColorStop(i / (gradient.length - 1), c),
-        );
+        gradient.forEach((c, i) => {
+          grad.addColorStop(i / (gradient.length - 1), c);
+        });
         offCtx.fillStyle = grad;
       } else {
         offCtx.fillStyle = color;

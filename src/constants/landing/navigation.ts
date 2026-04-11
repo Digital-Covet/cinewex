@@ -8,7 +8,6 @@ export const NAVIGATION_LINKS: readonly NavigationLink[] = [
 ] as const;
 
 export const FOOTER_LINKS: readonly NavigationLink[] = [
-  { label: "Privacy", href: "#" },
-  { label: "Terms", href: "#" },
-  { label: "Studio", href: "#" },
+  { label: "Privacy", href: "https://digitalcovet.com/privacy-policy/" },
+  { label: "Terms", href: "https://digitalcovet.com/terms-conditions/" },
 ] as const;

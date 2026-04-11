@@ -29,22 +29,34 @@ const calculateActiveStep = (scrollPercent: number): number => {
 
 export const useScrollWorkflow = (
   sectionRef: RefObject<HTMLElement | null>,
+  containerRef?: RefObject<HTMLElement | null>,
 ): UseScrollWorkflowReturn => {
   const [activeStep, setActiveStep] = useState<number>(0);
 
   useEffect(() => {
+    const container = containerRef?.current ?? window;
+    const isWindow = container === window;
+
     const handleScroll = throttle((): void => {
-      const scrollPercent = calculateScrollPercentage(sectionRef.current);
+      const scrollPercent = calculateScrollPercentage(
+        sectionRef.current,
+        container,
+      );
 
       if (scrollPercent < 0 || scrollPercent > 1) return;
 
       const step = calculateActiveStep(scrollPercent);
       setActiveStep(step);
-    }, 16); // ~60fps
+    }, 16);
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [sectionRef]);
+    if (isWindow) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      return () => window.removeEventListener("scroll", handleScroll);
+    } else {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+      return () => container.removeEventListener("scroll", handleScroll);
+    }
+  }, [sectionRef, containerRef]);
 
   const orbConfig = useMemo(
     () => getOrbConfigForStep(activeStep),

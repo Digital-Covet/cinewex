@@ -30,7 +30,7 @@ export const PortfolioSection = memo(() => {
 
   return (
     <section
-      className="relative h-screen bg-black min-h-screen flex items-center overflow-hidden py-32"
+      className="relative h-screen bg-black min-h-screen flex items-center overflow-hidden py-32 snap-start"
       id="portfolio"
     >
       <div className="absolute inset-0 z-0">
