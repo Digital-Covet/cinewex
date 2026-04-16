@@ -1,80 +1,24 @@
 import { UnfoldVertical } from "lucide-react";
+import Image from "next/image";
 import type React from "react";
-import { memo, useRef } from "react";
-import FuzzyText from "@/components/ui/FuzzyText";
-import Hyperspeed, { type HyperspeedOptions } from "@/components/ui/Hyperspeed";
-import Noise from "@/components/ui/Noise";
+import { memo, useMemo, useRef } from "react";
 import { useSliderPosition } from "@/hooks/landing/useSliderPosition";
-
-const HYPERSPEED_OPTIONS = {
-  distortion: "turbulentDistortion",
-  length: 400,
-  roadWidth: 10,
-  islandWidth: 2,
-  lanesPerRoad: 3,
-  fov: 90,
-  fovSpeedUp: 150,
-  speedUp: 2,
-  carLightsFade: 0.4,
-  totalSideLightSticks: 20,
-  lightPairsPerRoadWay: 40,
-  shoulderLinesWidthPercentage: 0.05,
-  brokenLinesWidthPercentage: 0.1,
-  brokenLinesLengthPercentage: 0.5,
-  lightStickWidth: [0.12, 0.5],
-  lightStickHeight: [1.3, 1.7],
-  movingAwaySpeed: [60, 80],
-  movingCloserSpeed: [-120, -160],
-  carLightsLength: [12, 80],
-  carLightsRadius: [0.05, 0.14],
-  carWidthPercentage: [0.3, 0.5],
-  carShiftX: [-0.8, 0.8],
-  carFloorSeparation: [0, 5],
-  colors: {
-    roadColor: 526344,
-    islandColor: 657930,
-    background: 0,
-    shoulderLines: 1250072,
-    brokenLines: 1250072,
-    leftCars: [14177983, 6770850, 12732332],
-    rightCars: [242627, 941733, 3294549],
-    sticks: 242627,
-  },
-} satisfies Partial<HyperspeedOptions>;
-
-const ModernBackground = memo(() => (
-  <div className="absolute inset-0">
-    {/* <Hyperspeed effectOptions={HYPERSPEED_OPTIONS} /> */}
-    <video
-      className="absolute inset-0 w-full h-full"
-      autoPlay
-      loop
-      muted
-      playsInline
-      src="https://videocdn.cdnpk.net/videos/23a8c9a9-4be1-569e-88aa-cd1bc128fcdc/horizontal/previews/watermarked/large.mp4"
-    />
-  </div>
-));
-ModernBackground.displayName = "ModernBackground";
 
 const ADVANTAGE_FEATURES = [
   {
     id: "iterations",
     title: "Infinite Iterations",
     description: "Explore a thousand styles in seconds.",
-    color: "cyan",
   },
   {
     id: "location",
     title: "Zero Location Fees",
     description: "From Mars to Metropolis, no travel needed.",
-    color: "purple",
   },
   {
     id: "delivery",
     title: "Delivery in Days",
     description: "Collapse month-long schedules into 72 hours.",
-    color: "cyan",
   },
 ] as const;
 
@@ -98,114 +42,167 @@ const LEGACY_CONSTRAINTS = [
 
 export const RealitySliderSection = memo(() => {
   const sliderRef = useRef<HTMLDivElement>(null);
-  const { position, setPosition, handleMove } = useSliderPosition(sliderRef);
+  const {
+    position,
+    setPosition,
+    isDragging,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+  } = useSliderPosition(sliderRef);
+
+  // Keyboard handler
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      setPosition((p) => Math.max(0, p - 5));
+    } else if (e.key === "ArrowRight") {
+      setPosition((p) => Math.min(100, p + 5));
+    }
+  };
+
+  // Dynamic opacity calculations based on slider position
+  // When slider is at 50%, both sides are at 50% opacity on mobile
+  // When slider moves left (position < 50), modern side fades out
+  // When slider moves right (position > 50), legacy side fades out
+  const modernOpacity = useMemo(() => {
+    // Normalize position: 0 = fully visible, 1 = fully hidden when dragged left
+    const fadeStart = 40; // Start fading when position is less than 40%
+    if (position >= fadeStart) return 1;
+    return Math.max(0.2, position / fadeStart);
+  }, [position]);
+
+  const legacyOpacity = useMemo(() => {
+    // Normalize position: 100 = fully visible, 60 = start fading
+    const fadeStart = 60; // Start fading when position is greater than 60%
+    if (position <= fadeStart) return 1;
+    return Math.max(0.2, (100 - position) / (100 - fadeStart));
+  }, [position]);
 
   return (
     <section
-      className="h-screen bg-black overflow-hidden flex flex-col snap-start"
+      className="h-screen bg-black overflow-hidden flex flex-col snap-start relative"
       id="advantage"
     >
       <div
         ref={sliderRef}
-        className="reality-slider relative w-full h-full cursor-ew-resize group"
-        onMouseMove={handleMove}
-        onKeyDown={(e) => {
-          if (e.key === "ArrowLeft") {
-            setPosition((p) => Math.max(0, p - 5));
-          } else if (e.key === "ArrowRight") {
-            setPosition((p) => Math.min(100, p + 5));
-          }
-        }}
+        className="reality-slider relative w-full h-full cursor-ew-resize group touch-none select-none"
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+        onKeyDown={handleKeyDown}
         role="slider"
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-valuenow={position}
+        aria-valuenow={Math.round(position)}
+        aria-label="Compare traditional and modern production methods"
+        aria-orientation="horizontal"
         tabIndex={0}
-        style={{ "--position": `${position}%` } as React.CSSProperties}
+        style={
+          {
+            "--position": `${position}%`,
+            touchAction: "none",
+          } as React.CSSProperties
+        }
       >
-        {/* --- MODERN SIDE (right panel, clips in from the right) --- */}
+        {/* --- MODERN SIDE (The Cinewex Way) --- */}
         <div
-          className="absolute inset-0 bg-black flex items-center justify-end px-12 md:px-32 overflow-hidden"
+          className="absolute inset-0 flex items-center justify-end px-4 sm:px-6 md:px-12 lg:px-32 overflow-hidden transition-opacity duration-300 md:opacity-100"
           style={{
             clipPath: `inset(0 0 0 ${position}%)`,
             willChange: "clip-path",
+            opacity: modernOpacity, // Dynamic fade on mobile
           }}
         >
-          <ModernBackground />
+          {/* Background Image */}
+          <Image
+            src="/reality-slider/cinewex-way.webp"
+            alt="Modern virtual production studio with advanced LED volume technology"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+            priority
+            draggable={false}
+          />
+          {/* Gradient Overlay - Dark to Transparent from right to center */}
+          <div className="absolute inset-0 bg-linear-to-l from-black/95 via-black/70 to-transparent z-0" />
 
-          <div className="absolute inset-0 " />
-
-          <div className="relative z-10 text-right space-y-12 max-w-xl">
-            <div className="space-y-2">
-              <span className="text-cyan-400 font-bold tracking-[0.3em] uppercase text-[10px]">
+          <div className="relative z-10 text-right space-y-3 sm:space-y-6 md:space-y-12 max-w-[45%] sm:max-w-[40%] md:max-w-xl ml-auto">
+            <div className="space-y-1 md:space-y-2">
+              <span className="text-cyan-400 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] sm:text-xs">
                 The Cinewex Way
               </span>
-              <h3 className="font-headline text-5xl font-bold text-white uppercase italic">
+              <h3 className="font-headline text-2xl sm:text-3xl md:text-5xl font-bold text-white uppercase italic leading-tight">
                 Hyper-Efficiency
               </h3>
             </div>
-            <div className="grid grid-cols-1 gap-8">
-              {ADVANTAGE_FEATURES.map((feature) => (
+
+            <div className="flex flex-col gap-2 sm:gap-4 md:gap-6">
+              {ADVANTAGE_FEATURES.map((feature, index) => (
                 <div
                   key={feature.id}
-                  className={`glass-panel p-6 rounded-2xl border-${feature.color}-500/30`}
+                  className="backdrop-blur-md bg-white/5 border border-white/10 p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
+                  style={{
+                    transform: `translateX(${(1 - modernOpacity) * 20 * (index + 1)}px)`,
+                  }}
                 >
-                  <p
-                    className={`text-${feature.color}-400 font-bold text-sm tracking-widest uppercase mb-1`}
-                  >
+                  <p className="text-white font-bold text-xs sm:text-sm md:text-base tracking-wider uppercase mb-0 md:mb-1">
                     {feature.title}
                   </p>
-                  <p className="text-white/70 text-xs">{feature.description}</p>
+                  <p className="text-white/70 text-[10px] sm:text-xs md:text-sm leading-relaxed hidden sm:block">
+                    {feature.description}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* --- LEGACY SIDE (left panel, clips in from the left) --- */}
+        {/* --- LEGACY SIDE (Traditional Production) --- */}
         <div
-          className="traditional-side absolute inset-y-0 left-0 bg-black flex items-center px-12 md:px-32 overflow-hidden border-r border-white/20"
+          className="absolute inset-0 flex items-center px-4 sm:px-6 md:px-12 lg:px-32 overflow-hidden transition-opacity duration-300 md:opacity-100"
           style={{
             clipPath: `inset(0 ${100 - position}% 0 0)`,
-            width: "100%",
+            opacity: legacyOpacity, // Dynamic fade on mobile
           }}
         >
-          <div className="absolute inset-0">
-            <Noise
-              patternSize={500}
-              patternScaleX={5}
-              patternScaleY={5}
-              patternRefreshInterval={2}
-              patternAlpha={25}
-            />
-          </div>
-          <div className="relative z-10 space-y-12 max-w-xl">
-            <div className="space-y-2">
-              <span className="font-bold tracking-[0.3em] uppercase text-[10px]">
+          {/* Background Image */}
+          <Image
+            src="/reality-slider/legacy.webp"
+            alt="Traditional film production set with large crew and equipment"
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+            draggable={false}
+          />
+          {/* Gradient Overlay - Dark to Transparent from left to center */}
+          <div className="absolute inset-0 bg-linear-to-r from-black/95 via-black/70 to-transparent z-0" />
+
+          <div className="relative z-10 text-left space-y-3 sm:space-y-6 md:space-y-12 max-w-[45%] sm:max-w-[40%] md:max-w-xl">
+            <div className="space-y-1 md:space-y-2">
+              <span className="text-red-400 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] sm:text-xs">
                 Legacy Production
               </span>
-              <h3 className="font-headline text-5xl font-bold leading-none">
-                <FuzzyText
-                  fontSize="clamp(1rem, 4vw, 4rem)"
-                  baseIntensity={0.2}
-                  hoverIntensity={0.5}
-                  enableHover
-                  className="block relative -left-16 my-4"
-                >
-                  Friction-Heavy
-                </FuzzyText>
+              <h3 className="font-headline text-2xl sm:text-3xl md:text-5xl font-bold text-white leading-none">
+                Friction-Heavy
               </h3>
             </div>
-            <div className="space-y-6">
-              {LEGACY_CONSTRAINTS.map((constraint) => (
+
+            <div className="flex flex-col gap-2 sm:gap-4 md:gap-6">
+              {LEGACY_CONSTRAINTS.map((constraint, index) => (
                 <div
                   key={constraint.id}
-                  className="border-l-2 border-zinc-700 pl-6"
+                  className="backdrop-blur-md bg-white/5 border border-white/10 p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
+                  style={{
+                    transform: `translateX(-${(1 - legacyOpacity) * 20 * (index + 1)}px)`,
+                  }}
                 >
-                  <p className="font-bold text-xs uppercase tracking-widest">
+                  <p className="text-white font-bold text-xs sm:text-sm md:text-base tracking-wider uppercase mb-0 md:mb-1">
                     {constraint.title}
                   </p>
-                  <p className="text-[10px] mt-1">{constraint.description}</p>
+                  <p className="text-white/70 text-[10px] sm:text-xs md:text-sm leading-relaxed hidden sm:block">
+                    {constraint.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -214,15 +211,22 @@ export const RealitySliderSection = memo(() => {
 
         {/* --- DRAG HANDLE --- */}
         <div
-          className="slider-handle absolute inset-y-0 w-1 bg-white/50 backdrop-blur z-20 flex items-center justify-center"
+          className={`absolute inset-y-0 w-1 bg-white/50 backdrop-blur z-20 flex items-center justify-center transition-transform duration-150 ${isDragging ? "scale-110" : ""}`}
           style={{
             left: `${position}%`,
             transform: "translateX(-50%)",
           }}
         >
-          <div className="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shadow-2xl border-4 border-black/10">
-            <UnfoldVertical className="w-5 h-5" />
+          <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white text-black flex items-center justify-center shadow-2xl border-2 border-white/20 active:scale-95 transition-transform">
+            <UnfoldVertical className="w-3 h-3 sm:w-4 sm:h-4" />
           </div>
+        </div>
+
+        {/* Mobile Instructions - Visible only when not dragging */}
+        <div
+          className={`absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-widest md:hidden pointer-events-none transition-opacity duration-500 ${isDragging ? "opacity-0" : "opacity-100"}`}
+        >
+          Drag to compare
         </div>
       </div>
     </section>

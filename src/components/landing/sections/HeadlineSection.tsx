@@ -1,12 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import DecryptedText from "@/components/ui/DecryptedText";
 
 const images = [
-  "https://picsum.photos/400/600?random=1",
-  "https://picsum.photos/400/600?random=2",
-  "https://picsum.photos/400/600?random=3",
+  "/headline/1.webp",
+  "/headline/2.webp",
+  "/headline/3.webp",
+  "/headline/4.webp",
+  "/headline/5.webp",
+  "/headline/6.webp",
 ];
 
 export default function HeadlineSection() {
@@ -21,31 +25,33 @@ export default function HeadlineSection() {
   }, []);
 
   const getImageClasses = (index: number) => {
-    // Calculate positions based on rotation: Right->Center->Left->Right
-    const centerIndex = (3 - activeIndex) % 3;
-    const leftIndex = (4 - activeIndex) % 3;
-    const rightIndex = (5 - activeIndex) % 3;
+    const total = images.length;
+    const centerIndex = activeIndex;
+    const leftIndex = (activeIndex - 1 + total) % total;
+    const rightIndex = (activeIndex + 1) % total;
 
+    // Responsive base classes: smaller on mobile, larger on md+
     const baseClasses =
-      "absolute w-64 h-96 object-cover rounded-lg shadow-2xl transition-all duration-700 ease-in-out";
+      "absolute w-48 h-72 md:w-64 md:h-96 object-cover rounded-lg shadow-2xl transition-all duration-700 ease-in-out";
 
     if (index === centerIndex) {
       return `${baseClasses} z-30 scale-100 translate-x-0 opacity-100`;
     } else if (index === leftIndex) {
-      return `${baseClasses} z-10 scale-90 -translate-x-24 opacity-70`;
+      // Responsive translate: smaller offset on mobile, larger on md+
+      return `${baseClasses} z-10 scale-90 -translate-x-20 md:-translate-x-32 opacity-60`;
     } else if (index === rightIndex) {
-      return `${baseClasses} z-10 scale-90 translate-x-24 opacity-70`;
+      return `${baseClasses} z-10 scale-90 translate-x-20 md:translate-x-32 opacity-60`;
     }
 
-    return baseClasses;
+    return `${baseClasses} z-0 scale-75 translate-x-0 opacity-0 pointer-events-none`;
   };
 
   return (
-    <section className="max-w-screen-2xl h-screen flex items-center py-16 px-8 mb-8 shrink-0 snap-start bg-zinc-950">
-      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="max-w-screen-2xl min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 snap-start bg-zinc-950">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Left Column */}
-        <div>
-          <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tighter text-white uppercase max-w-4xl leading-none">
+        <div className="order-2 lg:order-1">
+          <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white uppercase max-w-4xl leading-none">
             <DecryptedText
               animateOn="view"
               text="Break the Boundaries of Budget and Physics."
@@ -68,13 +74,16 @@ export default function HeadlineSection() {
         </div>
 
         {/* Right Column - Dynamic Images */}
-        <div className="relative h-[500px] w-full flex items-center justify-center">
+        <div className="relative h-80 sm:h-96 md:h-112 lg:h-125 w-full flex items-center justify-center overflow-hidden order-1 lg:order-2 mb-8 lg:mb-0">
           {images.map((src, index) => (
-            <img
+            <Image
               key={index}
               src={src}
               alt={`Creative visualization ${index + 1}`}
               className={getImageClasses(index)}
+              width={1696}
+              height={2528}
+              priority={index <= 2}
             />
           ))}
         </div>

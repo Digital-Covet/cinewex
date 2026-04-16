@@ -6,8 +6,7 @@ export const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
     title: "AI Product Ads",
     backgroundId: "bg-neon",
     hoverColor: "cyan",
-    imagePath:
-      "https://static.vecteezy.com/system/resources/previews/040/956/300/large_2x/energy-drink-ad-design-on-exploding-powder-effect-background-in-3d-illustration-vector.jpg",
+    imagePath: "/portfolio/ai_product_ads.webp",
     backgroundColor: "#001f24",
   },
   {
@@ -15,8 +14,7 @@ export const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
     title: "AI TV commercial production",
     backgroundId: "bg-aura",
     hoverColor: "purple",
-    imagePath:
-      "https://falloffthewall.com/wp-content/uploads/2022/07/Screen-Shot-2022-07-13-at-13.33.12.png",
+    imagePath: "/portfolio/ai_tv_commercial.webp",
     backgroundColor: "#2c0051",
   },
   {
@@ -33,8 +31,7 @@ export const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
     title: "Brand Ad Campaigns",
     backgroundId: "bg-orion",
     hoverColor: "purple",
-    imagePath:
-      "https://images.examples.com/wp-content/uploads/2018/04/Black-Friday-Billboard-Design-Example.jpg",
+    imagePath: "/portfolio/brand_ai_ad_campaign.webp",
     backgroundColor: "#1c1b1d",
   },
 ] as const;

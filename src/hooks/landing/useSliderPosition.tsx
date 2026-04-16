@@ -5,7 +5,10 @@ import { clamp } from "@/utils/landing/math";
 interface UseSliderPositionReturn {
   position: number;
   setPosition: React.Dispatch<React.SetStateAction<number>>;
-  handleMove: (e: React.MouseEvent<HTMLDivElement>) => void;
+  isDragging: boolean;
+  handlePointerDown: (e: React.PointerEvent) => void;
+  handlePointerMove: (e: React.PointerEvent) => void;
+  handlePointerUp: () => void;
 }
 
 export const useSliderPosition = (
@@ -14,23 +17,53 @@ export const useSliderPosition = (
   const [position, setPosition] = useState<number>(
     SLIDER_CONSTRAINTS.DEFAULT_POSITION,
   );
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>): void => {
-      if (!sliderRef.current) return;
+  const calculatePosition = useCallback(
+    (clientX: number): number => {
+      if (!sliderRef.current) return SLIDER_CONSTRAINTS.DEFAULT_POSITION;
 
       const rect = sliderRef.current.getBoundingClientRect();
-      const rawPosition = ((e.clientX - rect.left) / rect.width) * 100;
-      const clampedPosition = clamp(
+      const rawPosition = ((clientX - rect.left) / rect.width) * 100;
+
+      return clamp(
         rawPosition,
         SLIDER_CONSTRAINTS.MIN_POSITION,
         SLIDER_CONSTRAINTS.MAX_POSITION,
       );
-
-      setPosition(clampedPosition);
     },
     [sliderRef],
   );
 
-  return { position, setPosition, handleMove };
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      e.preventDefault();
+      setIsDragging(true);
+      (e.target as Element).setPointerCapture(e.pointerId);
+      setPosition(calculatePosition(e.clientX));
+    },
+    [calculatePosition],
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      setPosition(calculatePosition(e.clientX));
+    },
+    [isDragging, calculatePosition],
+  );
+
+  const handlePointerUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  return {
+    position,
+    setPosition,
+    isDragging,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+  };
 };
