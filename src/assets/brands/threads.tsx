@@ -1,4 +1,6 @@
-const Threads = (props) => (
+import React from "react";
+
+const Threads = (props: React.ComponentProps<"svg">) => (
   <svg
     aria-label="Threads"
     viewBox="0 0 192 192"

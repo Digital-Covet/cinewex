@@ -1,4 +1,6 @@
-const LinkedIn = (props) => (
+import React from "react";
+
+const LinkedIn = (props: React.ComponentProps<"svg">) => (
   <svg viewBox="0 0 1920 1920" xmlns="http://www.w3.org/2000/svg" {...props}>
     <title>LinkedIn</title>
     <path

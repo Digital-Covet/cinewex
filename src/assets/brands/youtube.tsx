@@ -1,4 +1,6 @@
-const Youtube = (props) => (
+import React from "react";
+
+const Youtube = (props: React.ComponentProps<"svg">) => (
   <svg
     width={512}
     height={512}

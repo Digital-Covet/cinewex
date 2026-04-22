@@ -1,4 +1,6 @@
-const Facebook = (props) => (
+import React from "react";
+
+const Facebook = (props: React.ComponentProps<"svg">) => (
   <svg
     viewBox="1 0 24 24"
     fill="none"

@@ -1,4 +1,6 @@
-const Instagram = (props) => (
+import React from "react";
+
+const Instagram = (props: React.ComponentProps<"svg">) => (
   <svg
     viewBox="0 0 32 32"
     xmlSpace="preserve"

@@ -1,4 +1,6 @@
-const XSvg = (props) => (
+import React from "react";
+
+const XSvg = (props: React.ComponentProps<"svg">) => (
   <svg viewBox="1 0 24 24" aria-hidden="true" {...props}>
     <path
       d="m21.742 21.75-7.563-11.179 7.056-8.321h-2.456l-5.691 6.714-4.54-6.714H2.359l7.29 10.776L2.25 21.75h2.456l6.035-7.118 4.818 7.118h6.191zM7.739 3.818 18.81 20.182h-2.447L5.29 3.818h2.447z"
