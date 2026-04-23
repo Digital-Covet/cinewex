@@ -2,10 +2,10 @@
 
 import type React from "react";
 import { lazy, Suspense, useRef } from "react";
+import { Footer } from "./common/Footer";
 import { Navigation } from "./common/Navigation";
 import HeadlineSection from "./sections/HeadlineSection";
 import { HeroSection } from "./sections/HeroSection";
-import { Footer } from "./common/Footer";
 
 const RealitySliderSection = lazy(() =>
   import("./sections/RealitySliderSection").then((m) => ({

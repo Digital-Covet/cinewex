@@ -5,7 +5,7 @@ import Orb from "@/components/ui/Orb";
 
 export const HeroSection = memo(() => {
   return (
-    <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-dvh flex items-center justify-center overflow-hidden pt-20">
       {/* Changed: Added explicit w-full h-full to ensure Orb container has defined dimensions */}
       <div className="absolute inset-0 w-full h-full">
         <Orb
@@ -33,10 +33,10 @@ export const HeroSection = memo(() => {
             Start Your Campaign
           </Link>
           <Link
-            href="https://www.instagram.com/cinewexofficial/"
+            href="https://www.youtube.com/@CinewexOfficial"
             className="glass-panel text-white hover:bg-white/10 px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all w-full max-w-xs md:w-auto"
           >
-            View Our Reel
+            View Our Videos
           </Link>
         </div>
       </div>
