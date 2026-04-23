@@ -7,7 +7,6 @@ import HeadlineSection from "./sections/HeadlineSection";
 import { HeroSection } from "./sections/HeroSection";
 import { Footer } from "./common/Footer";
 
-// Lazy load below-the-fold sections
 const RealitySliderSection = lazy(() =>
   import("./sections/RealitySliderSection").then((m) => ({
     default: m.RealitySliderSection,
@@ -48,18 +47,20 @@ const CinewexLanding: React.FC = () => {
   const mainRef = useRef<HTMLElement>(null);
 
   return (
-    <div className="selection:bg-primary-container selection:text-on-primary-container flex flex-col h-screen">
+    // Fix: Changed from h-screen to min-h-screen. The page should naturally flow, not be forced to exactly 100vh
+    <div className="selection:bg-primary-container selection:text-on-primary-container flex flex-col min-h-screen">
       <Navigation />
-      <main ref={mainRef} className="flex-1 overflow-y-auto overflow-x-hidden">
+      {/* Fix: Removed h-screen behavior — main should flow naturally, not be constrained to viewport */}
+      <main ref={mainRef} className="flex-1">
         <HeroSection />
         <Suspense fallback={<LoadingFallback />}>
           <HeadlineSection />
           <RealitySliderSection />
           <PortfolioSection />
-          <WorkflowSection containerRef={mainRef} />
+          <WorkflowSection />
           <TestimonialsSection />
           <CTASection />
-          <Footer /> {/* ← Moved OUTSIDE CTASection, direct child of main */}
+          <Footer />
         </Suspense>
       </main>
     </div>

@@ -4,7 +4,6 @@ export const NAVIGATION_LINKS: readonly NavigationLink[] = [
   { label: "Advantage", href: "#advantage", isActive: true },
   { label: "Services", href: "#services", isActive: false },
   { label: "Workflow", href: "#workflow", isActive: false },
-  { label: "Pricing", href: "#", isActive: false },
 ] as const;
 
 export const FOOTER_LINKS: readonly NavigationLink[] = [

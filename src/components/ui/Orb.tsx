@@ -187,7 +187,10 @@ export default function Orb({
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     container.appendChild(gl.canvas);
-
+    gl.canvas.style.position = "absolute";
+    gl.canvas.style.top = "0";
+    gl.canvas.style.left = "0";
+    gl.canvas.style.display = "block";
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
       vertex: vert,
@@ -217,9 +220,13 @@ export default function Orb({
       const width = container.clientWidth;
       const height = container.clientHeight;
       renderer.setSize(width * dpr, height * dpr);
-      // Fix 2 — template literals instead of string concatenation → resolves useTemplate warnings
       gl.canvas.style.width = `${width}px`;
       gl.canvas.style.height = `${height}px`;
+      // Ensure canvas doesn't cause layout shifts
+      gl.canvas.style.position = "absolute";
+      gl.canvas.style.top = "0";
+      gl.canvas.style.left = "0";
+      gl.canvas.style.display = "block";
       program.uniforms.iResolution.value.set(
         gl.canvas.width,
         gl.canvas.height,
