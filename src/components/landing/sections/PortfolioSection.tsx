@@ -35,7 +35,7 @@ export const PortfolioSection = memo(() => {
   return (
     <section
       className="relative min-h-dvh h-auto md:h-screen md:min-h-screen flex items-center overflow-hidden py-16 md:py-32"
-      id="portfolio"
+      id="services"
     >
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#0A0A0C]" />

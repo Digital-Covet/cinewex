@@ -33,7 +33,7 @@ export const HeroSection = memo(() => {
             Start Your Campaign
           </Link>
           <Link
-            href="https://www.youtube.com/@CinewexOfficial"
+            href="https://www.youtube.com/@Cinewex"
             className="glass-panel text-white hover:bg-white/10 px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all w-full max-w-xs md:w-auto"
           >
             View Our Videos

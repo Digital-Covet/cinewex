@@ -8,13 +8,15 @@ export const Navigation = memo(() => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-100 bg-[#0A0A0C]/40 backdrop-blur-lg border-b border-white/10">
       <div className="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
-        <Image
-          src="/cinewex.svg"
-          alt="Cinewex Logo"
-          width={100}
-          height={50}
-          priority
-        />
+        <Link href="/">
+          <Image
+            src="/cinewex.svg"
+            alt="Cinewex Logo"
+            width={100}
+            height={50}
+            priority
+          />
+        </Link>
         <NavigationMenu.Root className="hidden md:flex gap-10 items-center">
           <NavigationMenu.List className="flex gap-10 items-center">
             {NAVIGATION_LINKS.map((link) => (
