@@ -3,7 +3,6 @@ import Image from "next/image";
 import { memo } from "react";
 import Stack from "@/components/ui/Stack";
 import type { WorkflowStep } from "@/types/landing";
-import { Button } from "../common/Button";
 
 interface WorkflowStateCardProps {
   readonly step: WorkflowStep;
@@ -74,7 +73,6 @@ export const WorkflowStateCard = memo<WorkflowStateCardProps>(
       );
     }
 
-    // ─── Step 1 — Visual Sculpting ──────────────────────────────────────────
     if (step.id === 1) {
       return (
         <div
@@ -134,13 +132,12 @@ export const WorkflowStateCard = memo<WorkflowStateCardProps>(
         className={`workflow-state absolute inset-0 flex items-center justify-center p-0
           transition-all duration-700 ${getTransformClass()}`}
       >
-        {/* Video layer */}
         <Video
           autoPlay
           muted
           preload="none"
           playsInline
-          urlEndpoint="https://ik.imagekit.io/afmsie1ym"
+          urlEndpoint="https://ik.imagekit.io/nyfnukger"
           src="/final_ai_video.mp4"
           width={1920}
           height={1080}
