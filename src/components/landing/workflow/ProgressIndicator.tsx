@@ -3,10 +3,11 @@ import { memo } from "react";
 interface ProgressIndicatorProps {
   readonly activeStep: number;
   readonly totalSteps: number;
+  readonly onDotClick?: (index: number) => void;
 }
 
 export const ProgressIndicator = memo<ProgressIndicatorProps>(
-  ({ activeStep, totalSteps }) => {
+  ({ activeStep, totalSteps, onDotClick }) => {
     const getStepColor = (index: number): string => {
       if (index === activeStep) {
         return index === 1 ? "bg-purple-500" : "bg-cyan-400";
@@ -17,10 +18,12 @@ export const ProgressIndicator = memo<ProgressIndicatorProps>(
     return (
       <div className="mt-16 flex gap-4">
         {Array.from({ length: totalSteps }, (_, index) => (
-          <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: list is static and has no unique IDs
+          <button
             key={index}
-            className={`w-3 h-3 rounded-full transition-all duration-500 ${getStepColor(
+            type="button"
+            aria-label={`Go to step ${index + 1}`}
+            onClick={() => onDotClick?.(index)}
+            className={`w-3 h-3 rounded-full transition-all duration-500 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-400/50 ${getStepColor(
               index,
             )}`}
           />

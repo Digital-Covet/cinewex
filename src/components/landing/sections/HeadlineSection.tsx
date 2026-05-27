@@ -47,7 +47,7 @@ export default function HeadlineSection() {
   };
 
   return (
-    <section className="max-w-screen-2xl min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950">
+    <section className="min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950">
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Left Column */}
         <div className="order-2 lg:order-1">

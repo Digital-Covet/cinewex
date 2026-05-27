@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
 
 const spaceSans = Space_Grotesk({
   variable: "--font-space",
@@ -26,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceSans.variable} ${interSans.variable} antialiased`}
+      className={cn("antialiased", spaceSans.variable, interSans.variable, "font-mono", jetbrainsMono.variable)}
     >
       <body className="min-h-screen block">{children}</body>
     </html>

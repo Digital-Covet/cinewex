@@ -28,7 +28,7 @@ export const CTASection = memo(() => {
           <div className="max-w-xl mx-auto">
             <Link
               href="https://digitalcovet.com/contact-us/"
-              className="font-headline font-bold uppercase tracking-widest transition-all w-full rounded-2xl btn-primary-gradient text-white px-12 py-8 text-sm md:text-base inline-block"
+              className="font-headline font-bold uppercase tracking-widest transition-all w-full btn-primary-gradient text-white px-12 py-8 text-sm md:text-base inline-block"
             >
               Let's Build Your Campaign
             </Link>
