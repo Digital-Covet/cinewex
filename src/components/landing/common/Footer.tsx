@@ -44,7 +44,7 @@ export const Footer = memo<FooterProps>(({ className = "" }) => {
     <footer className={`${FOOTER_BASE_CLASSES} ${className}`}>
       <div className="max-w-screen-2xl mx-auto px-12 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
         {/* Logo & Copyright */}
-        <div className="flex flex-col gap-4 text-center md:text-left">
+        <Link href="/" className="flex flex-col gap-4 text-center md:text-left">
           <Image
             src="/cinewex.svg"
             alt="Cinewex Logo"
@@ -56,7 +56,7 @@ export const Footer = memo<FooterProps>(({ className = "" }) => {
             Copyright: © 2026 CINEWEX. AI CREATIVE STUDIO FOR BRANDS &
             Businesses.
           </p>
-        </div>
+        </Link>
 
         {/* Navigation Links */}
         <nav
