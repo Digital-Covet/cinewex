@@ -41,9 +41,16 @@ export const HeroSection = memo(() => {
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-20 pointer-events-none">
+      <button
+        type="button"
+        onClick={() => {
+          document.getElementById("headline-section")?.scrollIntoView({ behavior: "smooth" });
+        }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-20 hover:opacity-60 cursor-pointer transition-opacity"
+        aria-label="Scroll to next section"
+      >
         <ChevronsDown className="w-10 h-10" />
-      </div>
+      </button>
     </section>
   );
 });

@@ -26,28 +26,42 @@ export default function HeadlineSection() {
 
   const getImageClasses = (index: number) => {
     const total = images.length;
-    const centerIndex = activeIndex;
-    const leftIndex = (activeIndex - 1 + total) % total;
-    const rightIndex = (activeIndex + 1) % total;
+
+    // Calculate the relative distance from the active center
+    // This allows us to establish a spatial queue (Far Left -> Left -> Center -> Right -> Far Right)
+    let diff = (index - activeIndex) % total;
+
+    // Adjust diff so it wraps symmetrically around 0 (e.g., -2, -1, 0, 1, 2, 3)
+    if (diff < -Math.floor(total / 2)) diff += total;
+    if (diff > Math.floor(total / 2)) diff -= total;
 
     // Responsive base classes: smaller on mobile, larger on md+
     const baseClasses =
       "absolute w-48 h-72 md:w-64 md:h-96 object-cover rounded-lg shadow-2xl transition-all duration-700 ease-in-out";
 
-    if (index === centerIndex) {
+    if (diff === 0) {
+      // Center Image
       return `${baseClasses} z-30 scale-100 translate-x-0 opacity-100`;
-    } else if (index === leftIndex) {
-      // Responsive translate: smaller offset on mobile, larger on md+
-      return `${baseClasses} z-10 scale-90 -translate-x-20 md:-translate-x-32 opacity-60`;
-    } else if (index === rightIndex) {
-      return `${baseClasses} z-10 scale-90 translate-x-20 md:translate-x-32 opacity-60`;
+    } else if (diff === -1) {
+      // Left Image
+      return `${baseClasses} z-20 scale-90 -translate-x-52 md:-translate-x-72 opacity-60`;
+    } else if (diff === 1) {
+      // Right Image
+      return `${baseClasses} z-20 scale-90 translate-x-52 md:translate-x-72 opacity-60`;
+    } else if (diff < -1) {
+      // Far Left (Hidden exiting images)
+      return `${baseClasses} z-0 scale-75 -translate-x-72 md:-translate-x-96 opacity-0 pointer-events-none`;
+    } else {
+      // Far Right (Hidden exiting/entering images)
+      return `${baseClasses} z-0 scale-75 translate-x-72 md:translate-x-96 opacity-0 pointer-events-none`;
     }
-
-    return `${baseClasses} z-0 scale-75 translate-x-0 opacity-0 pointer-events-none`;
   };
 
   return (
-    <section className="min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950">
+    <section
+      id="headline-section"
+      className="min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950"
+    >
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Left Column */}
         <div className="order-2 lg:order-1">

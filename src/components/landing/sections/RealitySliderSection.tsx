@@ -52,7 +52,6 @@ export const RealitySliderSection = memo(() => {
     handlePointerUp,
   } = useSliderPosition(sliderRef);
 
-  // Keyboard handler
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       setPosition((p) => Math.max(0, p - 5));
@@ -61,18 +60,15 @@ export const RealitySliderSection = memo(() => {
     }
   };
 
-  // FIXED: Dynamic opacity calculations based on slider position
   const modernOpacity = useMemo(() => {
-    // Fully opaque from 0 to 60. Fades to 0.2 as position goes 60 -> 100.
     if (position <= 60) return 1;
-    const fadeProgress = (position - 60) / 40; // 0 at 60, 1 at 100
+    const fadeProgress = (position - 60) / 40;
     return Math.max(0.2, 1 - fadeProgress * 0.8);
   }, [position]);
 
   const legacyOpacity = useMemo(() => {
-    // Fully opaque from 40 to 100. Fades to 0.2 as position goes 40 -> 0.
     if (position >= 40) return 1;
-    const fadeProgress = (40 - position) / 40; // 0 at 40, 1 at 0
+    const fadeProgress = (40 - position) / 40;
     return Math.max(0.2, 1 - fadeProgress * 0.8);
   }, [position]);
 
@@ -83,11 +79,13 @@ export const RealitySliderSection = memo(() => {
     >
       <div
         ref={sliderRef}
-        className="reality-slider relative w-full h-full cursor-ew-resize group touch-none select-none"
+        // Removed "touch-none" here to allow native mobile touch evaluation
+        className="reality-slider relative w-full h-full cursor-ew-resize group select-none"
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
+        onPointerCancel={handlePointerUp} // Ensures dragging is canceled on native scroll takeover
         onKeyDown={handleKeyDown}
         role="slider"
         aria-valuemin={0}
@@ -99,20 +97,20 @@ export const RealitySliderSection = memo(() => {
         style={
           {
             "--position": `${position}%`,
-            touchAction: "none",
+            touchAction: "pan-y", // CSS standard: Allows vertical native scrolling but defers horizontal handling
           } as React.CSSProperties
         }
       >
-        {/* --- MODERN SIDE (The Cinewex Way) --- */}
+        {}
         <div
           className="absolute inset-0 flex items-center justify-end px-4 sm:px-6 md:px-12 lg:px-32 overflow-hidden transition-opacity duration-300 md:opacity-100"
           style={{
             clipPath: `inset(0 0 0 ${position}%)`,
             willChange: "clip-path",
-            opacity: modernOpacity, // Dynamic fade on mobile
+            opacity: modernOpacity,
           }}
         >
-          {/* Background Image */}
+          {}
           <Image
             src="/reality-slider/cinewex-way.webp"
             alt="Modern virtual production studio with advanced LED volume technology"
@@ -122,9 +120,8 @@ export const RealitySliderSection = memo(() => {
             priority
             draggable={false}
           />
-          {/* Gradient Overlay - Dark to Transparent from right to center */}
+          {}
           <div className="absolute inset-0 bg-linear-to-l from-black/95 via-black/70 to-transparent z-0" />
-
           <div className="relative z-10 text-right space-y-3 sm:space-y-6 md:space-y-12 max-w-[45%] sm:max-w-[40%] md:max-w-xl ml-auto">
             <div className="space-y-1 md:space-y-2">
               <span className="text-cyan-400 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] sm:text-xs">
@@ -134,7 +131,6 @@ export const RealitySliderSection = memo(() => {
                 AI-Powered Efficiency
               </h3>
             </div>
-
             <div className="flex flex-col gap-2 sm:gap-4 md:gap-6">
               {ADVANTAGE_FEATURES.map((feature, index) => (
                 <div
@@ -155,16 +151,15 @@ export const RealitySliderSection = memo(() => {
             </div>
           </div>
         </div>
-
-        {/* --- LEGACY SIDE (Traditional Production) --- */}
+        {}
         <div
           className="absolute inset-0 flex items-center px-4 sm:px-6 md:px-12 lg:px-32 overflow-hidden transition-opacity duration-300 md:opacity-100"
           style={{
             clipPath: `inset(0 ${100 - position}% 0 0)`,
-            opacity: legacyOpacity, // Dynamic fade on mobile
+            opacity: legacyOpacity,
           }}
         >
-          {/* Background Image */}
+          {}
           <Image
             src="/reality-slider/legacy.webp"
             alt="Traditional film production set with large crew and equipment"
@@ -173,9 +168,8 @@ export const RealitySliderSection = memo(() => {
             sizes="100vw"
             draggable={false}
           />
-          {/* Gradient Overlay - Dark to Transparent from left to center */}
+          {}
           <div className="absolute inset-0 bg-linear-to-r from-black/95 via-black/70 to-transparent z-0" />
-
           <div className="relative z-10 text-left space-y-3 sm:space-y-6 md:space-y-12 max-w-[45%] sm:max-w-[40%] md:max-w-xl">
             <div className="space-y-1 md:space-y-2">
               <span className="text-red-400 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[10px] sm:text-xs">
@@ -185,7 +179,6 @@ export const RealitySliderSection = memo(() => {
                 Slow & Expensive
               </h3>
             </div>
-
             <div className="flex flex-col gap-2 sm:gap-4 md:gap-6">
               {LEGACY_CONSTRAINTS.map((constraint, index) => (
                 <div
@@ -206,8 +199,7 @@ export const RealitySliderSection = memo(() => {
             </div>
           </div>
         </div>
-
-        {/* --- DRAG HANDLE --- */}
+        {}
         <div
           className={`absolute inset-y-0 w-1 bg-white/50 backdrop-blur z-20 flex items-center justify-center transition-transform duration-150 ${isDragging ? "scale-110" : ""}`}
           style={{
@@ -219,8 +211,7 @@ export const RealitySliderSection = memo(() => {
             <UnfoldVertical className="w-3 h-3 sm:w-4 sm:h-4" />
           </div>
         </div>
-
-        {/* Mobile Instructions - Visible only when not dragging */}
+        {}
         <div
           className={`absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 text-xs uppercase tracking-widest md:hidden pointer-events-none transition-opacity duration-500 ${isDragging ? "opacity-0" : "opacity-100"}`}
         >
