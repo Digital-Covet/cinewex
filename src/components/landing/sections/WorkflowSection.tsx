@@ -15,24 +15,18 @@ export const WorkflowSection = memo(() => {
   const [api, setApi] = useState<CarouselApi>();
   const [activeStep, setActiveStep] = useState(0);
 
-  // Sync active step with the Embla Carousel
   useEffect(() => {
     if (!api) return;
-
     const onSelect = () => {
       setActiveStep(api.selectedScrollSnap());
     };
-
-    // Set initial step
     onSelect();
-
     api.on("select", onSelect);
     return () => {
       api.off("select", onSelect);
     };
   }, [api]);
 
-  // Orb configuration changes based on the active carousel slide
   const orbConfig =
     ORB_CONFIGS[`STEP_${activeStep}` as keyof typeof ORB_CONFIGS] ??
     ORB_CONFIGS.STEP_0;
@@ -40,18 +34,18 @@ export const WorkflowSection = memo(() => {
   return (
     <div
       id="workflow"
-      className="relative bg-[#0A0A0C] flex flex-col items-center justify-center px-3 py-4 sm:px-5 sm:py-6 lg:p-8 overflow-hidden min-h-screen"
+      className="relative bg-[#0A0A0C] flex flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-12 lg:p-16 overflow-hidden min-h-screen"
     >
-      {/* Background animated orb */}
+      {/* Background Glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-1000 ${orbConfig.width} ${orbConfig.height} ${orbConfig.color} ${orbConfig.blur}`}
         />
       </div>
 
-      {/* Section heading */}
-      <div className="relative z-10 text-center mb-4 sm:mb-8 lg:mb-16 px-4 w-full max-w-6xl">
-        <span className="text-cyan-400 font-bold tracking-[0.5em] uppercase text-[9px] sm:text-[10px] block mb-2 sm:mb-4">
+      {/* Header */}
+      <div className="relative z-10 text-center mb-6 sm:mb-10 lg:mb-16 px-4 w-full max-w-6xl">
+        <span className="text-cyan-400 font-bold tracking-[0.5em] uppercase text-[10px] sm:text-xs block mb-3 sm:mb-4">
           The Engine
         </span>
         <h2 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter text-white uppercase">
@@ -59,7 +53,7 @@ export const WorkflowSection = memo(() => {
         </h2>
       </div>
 
-      {/* Glowing border wrapper containing the Carousel */}
+      {/* Carousel Container */}
       <BorderGlow
         edgeSensitivity={30}
         glowColor="40 80 80"
@@ -70,9 +64,9 @@ export const WorkflowSection = memo(() => {
         coneSpread={25}
         animated={false}
         colors={["#c084fc", "#f472b6", "#38bdf8"]}
-        className="relative z-10 w-full max-w-5xl aspect-4/3 sm:aspect-3/2 lg:aspect-video min-h-70 rounded-3xl p-1 overflow-hidden"
+        className="relative z-10 w-full max-w-5xl h-120 sm:h-140 lg:h-auto lg:aspect-video rounded-3xl p-1 overflow-hidden"
       >
-        <div className="w-full h-full bg-black rounded-[20px] overflow-hidden relative">
+        <div className="w-full h-full bg-black rounded-3xl overflow-hidden relative">
           <Carousel setApi={setApi} className="w-full h-full">
             <CarouselContent className="h-full">
               {WORKFLOW_STEPS.map((step) => (
@@ -85,7 +79,7 @@ export const WorkflowSection = memo(() => {
         </div>
       </BorderGlow>
 
-      {/* Clickable progress dots */}
+      {/* Progress Dots */}
       <ProgressIndicator
         activeStep={activeStep}
         totalSteps={WORKFLOW_STEPS.length}
