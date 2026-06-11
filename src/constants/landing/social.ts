@@ -19,7 +19,7 @@ export const SOCIAL_LINKS = [
     hoverBgClass: "hover:bg-black",
   },
   {
-    href: "https://www.facebook.com/Cinewex",
+    href: "https://www.facebook.com/Cinewex.Media",
     label: "Follow us on Facebook",
     icon: Facebook,
     hoverBgClass: "hover:bg-blue-600",
@@ -37,7 +37,7 @@ export const SOCIAL_LINKS = [
     hoverBgClass: "hover:bg-black",
   },
   {
-    href: "https://www.linkedin.com/company/cinewexofficial",
+    href: "https://www.linkedin.com/company/cinewexmedia",
     label: "Follow us on LinkedIn",
     icon: Linkedin,
     hoverBgClass: "hover:bg-blue-700",
