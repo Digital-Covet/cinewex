@@ -41,4 +41,14 @@ export const TOOLS_USED: readonly ToolBrand[] = [
     name: "Roboneo",
     imagePath: "/tools/roboneo.svg",
   },
+  {
+    id: "open-art",
+    name: "Open Art",
+    imagePath: "/tools/open-art.svg",
+  },
+  {
+    id: "higgsfield",
+    name: "HiggsField",
+    imagePath: "/tools/higgsfield.svg",
+  },
 ] as const;
