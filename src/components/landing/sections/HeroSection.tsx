@@ -27,7 +27,7 @@ export const HeroSection = memo(() => {
         </h1>
         <div className="flex flex-col md:flex-row gap-4 justify-center items-center pointer-events-auto">
           <Link
-            href="https://digitalcovet.com/contact-us/ "
+            href="https://tally.so/r/2EgGgL"
             className="btn-primary-gradient text-white px-12 py-5 font-headline font-bold uppercase tracking-widest text-xs transition-all w-full max-w-xs md:w-auto text-center"
           >
             Start Your Campaign
@@ -44,7 +44,9 @@ export const HeroSection = memo(() => {
       <button
         type="button"
         onClick={() => {
-          document.getElementById("headline-section")?.scrollIntoView({ behavior: "smooth" });
+          document
+            .getElementById("headline-section")
+            ?.scrollIntoView({ behavior: "smooth" });
         }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-20 hover:opacity-60 cursor-pointer transition-opacity"
         aria-label="Scroll to next section"

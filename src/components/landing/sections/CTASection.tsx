@@ -27,7 +27,7 @@ export const CTASection = memo(() => {
           </h2>
           <div className="max-w-xl mx-auto">
             <Link
-              href="https://digitalcovet.com/contact-us/"
+              href="https://tally.so/r/2EgGgL"
               className="font-headline font-bold uppercase tracking-widest transition-all w-full btn-primary-gradient text-white px-12 py-8 text-sm md:text-base inline-block"
             >
               Let's Build Your Campaign

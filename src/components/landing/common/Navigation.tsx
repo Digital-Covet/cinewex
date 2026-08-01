@@ -41,7 +41,7 @@ export const Navigation = memo(() => {
           </NavigationMenu.List>
         </NavigationMenu.Root>
         <Link
-          href="https://digitalcovet.com/contact-us/"
+          href="https://tally.so/r/2EgGgL"
           className="btn-primary-gradient text-white px-5 py-2 font-headline font-bold uppercase tracking-widest text-[10px] transition-all"
         >
           Get Started
