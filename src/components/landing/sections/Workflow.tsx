@@ -90,7 +90,7 @@ export default function Workflow() {
             <div className="relative aspect-video overflow-hidden rounded-frame bg-surface md:aspect-[4/3]">
               <Image
                 src={step.image}
-                alt=""
+                alt={step.imageAlt}
                 fill
                 sizes="(min-width: 768px) 34vw, 92vw"
                 className="object-cover"
