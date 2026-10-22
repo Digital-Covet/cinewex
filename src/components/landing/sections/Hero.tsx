@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import { useLayoutEffect, useRef } from "react";
+import { HEADLINE } from "@/constants/landing";
 import { gsap, MOTION_QUERIES } from "@/lib/gsap";
 import CtaLink from "../CtaLink";
 import Viewfinder from "../Viewfinder";
-
-const HEADLINE = ["Cinematic ad films.", "No film set required."];
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);

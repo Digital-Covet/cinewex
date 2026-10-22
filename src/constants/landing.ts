@@ -4,6 +4,9 @@ export const TALLY_URL = "https://tally.so/r/2EgGgL";
 /** Cinewex's ImageKit account; `video` paths below are relative to it. */
 export const IMAGEKIT_URL_ENDPOINT = "https://ik.imagekit.io/nyfnukger";
 
+/** Hero and share-image headline; the second line is set in gold. */
+export const HEADLINE = ["Cinematic ad films.", "No film set required."] as const;
+
 export const NAV_LINKS = [
   { label: "Services", href: "#services" },
   { label: "Process", href: "#process" },
@@ -44,6 +47,8 @@ export const WORKFLOW_STEPS = [
       "Tell us the product, the audience and the feeling you want to leave behind. We turn it into a script, a shot list and a storyboard you approve before a single frame is generated.",
     outputs: ["Script", "Shot list", "Storyboard"],
     image: "/storyboards/01.webp",
+    imageAlt:
+      "Storyboard frame: a mother leans over a wooden crib to soothe her baby",
   },
   {
     title: "Visual Sculpting",
@@ -51,6 +56,8 @@ export const WORKFLOW_STEPS = [
       "We generate, direct and refine every scene: performance, light, camera moves, voice and music. You review cuts as they come together, and we iterate until each frame earns its place.",
     outputs: ["Scene generation", "Voice & score", "Review rounds"],
     image: "/storyboards/05.webp",
+    imageAlt:
+      "Generated scene: a woman opens a wooden cabinet stocked with skincare bottles",
   },
   {
     title: "Final Delivery",
@@ -58,6 +65,7 @@ export const WORKFLOW_STEPS = [
       "You receive graded, mixed masters in every format you need: 16:9 for TV and YouTube, 9:16 for Reels and Shorts, 1:1 and 4:5 for the feed.",
     outputs: ["Colour grade", "Sound mix", "Every aspect ratio"],
     image: "/storyboards/09.webp",
+    imageAlt: "Final frame: a man lathers his hair holding a shampoo bottle",
     video: "/final_ai_video.mp4",
   },
 ] as const;
