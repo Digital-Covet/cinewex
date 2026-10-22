@@ -1,197 +1,73 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
-/* Layer order (important in v4) */
-@layer theme, base, components, utilities;
-
-/* ---------------- THEME (replaces tailwind.config.ts) ---------------- */
 @theme {
-  /* COLORS */
-  --color-on-background: #e5e1e4;
-  --color-inverse-surface: #e5e1e4;
-  --color-on-secondary-fixed-variant: #6700b5;
-  --color-error: #ffb4ab;
-  --color-on-surface: #e5e1e4;
-  --color-surface-container-low: #1c1b1d;
-  --color-surface-tint: #00daf3;
-  --color-inverse-primary: #006875;
-  --color-on-primary: #00363d;
-  --color-primary: #c3f5ff;
-  --color-on-secondary-fixed: #2c0051;
-  --color-primary-container: #00e5ff;
-  --color-secondary-fixed: #efdbff;
-  --color-on-error-container: #ffdad6;
-  --color-inverse-on-surface: #313032;
-  --color-on-primary-container: #00626e;
-  --color-on-tertiary-fixed-variant: #464651;
-  --color-surface-bright: #39393b;
-  --color-primary-fixed: #9cf0ff;
-  --color-on-primary-fixed: #001f24;
-  --color-on-primary-fixed-variant: #004f58;
-  --color-tertiary-fixed-dim: #c7c5d3;
-  --color-background: #0a0a0c;
-  --color-tertiary-fixed: #e3e1ef;
-  --color-secondary-fixed-dim: #dcb8ff;
-  --color-surface-container-highest: #353437;
-  --color-surface: #0a0a0c;
-  --color-error-container: #93000a;
-  --color-on-secondary: #480081;
-  --color-outline-variant: #3b494c;
-  --color-on-tertiary-fixed: #1b1b25;
-  --color-primary-fixed-dim: #00daf3;
-  --color-surface-container: #111114;
-  --color-secondary: #dcb8ff;
-  --color-surface-dim: #0a0a0c;
-  --color-on-error: #690005;
-  --color-secondary-container: #7701d0;
-  --color-on-tertiary-container: #595864;
-  --color-on-surface-variant: #a1a1aa;
-  --color-surface-container-high: #222226;
-  --color-tertiary: #eeebfa;
+  --color-canvas: #0b0b0c;
+  --color-surface: #151517;
+  --color-raised: #1e1e21;
+  --color-fg: #ede8df;
+  --color-fg-muted: #a39e95;
+  --color-gold: #e8a33d;
+  --color-gold-ink: #0b0b0c;
+  --color-line: rgb(237 232 223 / 0.1);
+  --color-line-strong: rgb(237 232 223 / 0.22);
 
-  /* RADIUS */
-  --radius: 0.125rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.5rem;
-  --radius-full: 0.75rem;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
-  /* FONTS */
-  --font-headline: "Space Grotesk", sans-serif;
-  --font-body: "Inter", sans-serif;
-  --font-label: "Inter", sans-serif;
+  --radius-frame: 4px;
+  --radius-control: 2px;
+
+  --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ---------------- BASE ---------------- */
+/* Letterbox bar height for a 2.39:1 frame, kept between a sliver and a band
+   so portrait phones don't lose most of the screen to black. */
+:root {
+  --letterbox: clamp(6svh, calc((100svh - 100vw / 2.39) / 2), 14svh);
+}
+
 @layer base {
-  .root {
-    isolation: isolate;
+  html {
+    background-color: var(--color-canvas);
+    color-scheme: dark;
   }
+
   body {
-    background-color: var(--color-background);
-    color: var(--color-on-surface);
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
+    background-color: var(--color-canvas);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-gold-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
   }
 }
 
-/* ---------------- UTILITIES ---------------- */
-
-/* Fonts */
-@utility font-headline {
-  font-family: var(--font-headline);
-}
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-outline-variant);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-on-surface-variant);
-}
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-outline-variant) transparent;
-}
-/* Glass panel */
-@utility glass-panel {
-  background: rgba(26, 26, 36, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* Scene slate: the small clapperboard label that opens each section. */
+@utility slate {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
 }
 
-/* Gradient button */
-@utility btn-primary-gradient {
-  background: linear-gradient(to right, #00e5ff, #8a2be2);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.2);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@utility container-cine {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
 }
 
-/* Hover (use with hover:btn-primary-gradient-hover) */
-@utility btn-primary-gradient-hover {
-  box-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
-  transform: scale(1.02);
-}
-
-/* Text gradient */
-@utility text-gradient {
-  background: linear-gradient(to right, #00daf3, #dcb8ff);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Slider */
-@utility reality-slider {
-  --position: 50%;
-}
-
-@utility slider-handle {
-  left: var(--position);
-  transform: translateX(-50%);
-}
-
-@utility traditional-side {
-  width: var(--position);
-}
-
-/* Portfolio */
-@utility portfolio-item {
-  mix-blend-mode: difference;
-}
-
-@utility portfolio-bg {
-  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Marquee */
-@utility marquee-container {
-  position: relative;
-}
-
-@utility marquee {
-  display: flex;
-  overflow: hidden;
-  user-select: none;
-  gap: 4rem;
-}
-
-@utility marquee-content {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-around;
-  min-width: 100%;
-  gap: 4rem;
-  animation: scroll 40s linear infinite;
-}
-
-/* ---------------- ANIMATIONS ---------------- */
-
-@keyframes scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@utility animate-reveal {
-  animation: fade-in-up 0.8s ease-out forwards;
+@utility text-balance-pretty {
+  text-wrap: balance;
 }
