@@ -1,154 +1,95 @@
 # Cinewex
 
-AI-powered cinematic ad film production at unprecedented speed.
+Marketing site for **Cinewex**, an AI creative studio producing cinematic ad films for brands.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-087ea4)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8)](https://tailwindcss.com/)
+[![Biome](https://img.shields.io/badge/Biome-2-60a5fa)](https://biomejs.dev/)
 
-## Project Description
+## Overview
 
-Cinewex is a high-impact landing page for a creative agency specializing in AI-generated cinematic advertising. The platform showcases the agency's unique value proposition: replacing traditional film production workflows with neural AI pipelines that deliver cinema-grade content in days rather than months.
-
-Built with Next.js 16, React 19, and TypeScript, the site features immersive WebGL animations, scroll-driven interactions, and a dark, cinematic aesthetic that reflects the brand's premium positioning.
+Cinewex replaces the traditional film-production pipeline with an AI-driven one: cinematic commercials, product ads, and social campaigns delivered in days instead of months. This repository is the studio's public site — a single, dark, cinema-styled landing page that explains the offer and routes every conversion point to a Tally project brief.
 
 ## Features
 
-- **Hero Section**: Full-viewport hero with WebGL-powered animated orb
-- **Headline Section**: Bold typography showcasing brand positioning
-- **Reality Slider**: Interactive before/after comparison between traditional and AI production
-- **Portfolio Exhibition**: Hover-triggered background animations with portfolio items
-- **Neural Workflow**: Scroll-driven 3-step workflow visualization with animated states
-- **Testimonials**: Infinite marquee of client brands with testimonial quote
-- **Call to Action**: High-impact conversion section
-- **Navigation**: Fixed header with backdrop blur and smooth scrolling
-- **Footer**: Social links and legal navigation
+// TODO
 
-## Getting Started
+## Tech stack
 
-### Prerequisites
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 16.2 (App Router, single route) |
+| UI | React 19.2 with the React Compiler enabled |
+| Language | TypeScript 5, `strict` mode |
+| Styling | Tailwind CSS 4, CSS-first (`@theme` / `@utility` in `globals.css`) |
+| Primitives | Base UI (`@base-ui/react`) with shadcn-style components (`components.json`) |
+| Carousel | Embla (`embla-carousel-react`) |
+| Motion | Motion (`motion/react`) for text and card-stack animation, plus CSS keyframes |
+| 3D | OGL with hand-written GLSL for the hero orb |
+| Media | `next/image`, `next/font`, ImageKit (`@imagekit/next`) |
+| Icons | Lucide, Phosphor, and local brand SVGs |
+| Tooling | Biome 2.2, pnpm |
 
-- Node.js 18+
-- pnpm 8+ (or npm/yarn)
+## Requirements
 
-### Installation
+- **Node.js 20.9.0 or newer** (minimum declared by Next.js 16)
+- **pnpm 9+** — the repo ships `pnpm-lock.yaml` (lockfile v9) and `pnpm-workspace.yaml`
+- A WebGL-capable browser for the hero orb
+
+## Getting started
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/cinewex.git
+git clone https://github.com/Digital-Covet/cinewex.git
 cd cinewex
 
 # Install dependencies
 pnpm install
 
-# Start development server
+# Start the development server
 pnpm dev
+```
 
-# Build for production
+The site runs at [http://localhost:3000](http://localhost:3000).
+
+Production build:
+
+```bash
 pnpm build
-
-# Start production server
 pnpm start
 ```
 
-### Linting
+### Scripts
 
-```bash
-# Run Biome linter
-pnpm lint
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the Next.js dev server |
+| `pnpm build` | Create a production build |
+| `pnpm start` | Serve the production build |
+| `pnpm lint` | Run `biome check` (lint + format checks) |
+| `pnpm format` | Run `biome format --write` |
 
-# Format code
-pnpm format
-```
+## Configuration
 
-## Key Patterns
+No environment variables are required.
 
-### Component Architecture
+### Content and links
 
-All components use React's `memo()` for performance optimization with explicit `displayName` for debugging:
+// TODO
 
-```tsx
-export const MyComponent = memo<MyProps>(({ prop }) => {
-  return <div>{prop}</div>;
-});
+### Conversion form
 
-MyComponent.displayName = "MyComponent";
-```
+The Tally URL (`https://tally.so/r/2EgGgL`) is duplicated in three components: `Navigation.tsx`, `HeroSection.tsx`, and `CTASection.tsx`. Update all three when the form changes.
 
-### Custom Hooks
+### Media
 
-Stateful logic is extracted into custom hooks:
+// TODO
 
-- `useScrollWorkflow`: Manages scroll-driven workflow step transitions
-- `useSliderPosition`: Handles the reality slider drag interaction
-- `usePortfolioBackgrounds`: Controls portfolio background visibility
+### Metadata and fonts
 
-### WebGL Orb
+Titles, descriptions, and Google Fonts (Space Grotesk, Inter, JetBrains Mono) are configured in `src/app/layout.tsx`. Design tokens, colors, radii, and custom utilities live in `src/app/globals.css`.
 
-The `Orb` component uses OGL (lightweight WebGL library) with custom GLSL shaders for the hero background effect:
-
-```tsx
-// Orb renders a full-screen WebGL canvas with:
-// - 3D simplex noise for organic movement
-// - HSL color space manipulation
-// - Mouse-reactive hover effects
-```
-
-### Lazy Loading
-
-Below-fold sections are lazy-loaded to improve initial page load:
-
-```tsx
-const RealitySliderSection = lazy(() =>
-  import("./sections/RealitySliderSection").then((m) => ({
-    default: m.RealitySliderSection,
-  }))
-);
-```
-
-### CSS Utilities
-
-Custom Tailwind utilities defined in `globals.css`:
-
-- `glass-panel`: Frosted glass effect with backdrop blur
-- `btn-primary-gradient`: Gradient button with glow
-- `text-gradient`: Text fill with gradient
-- `marquee`: Infinite scroll animation
-
-## Environment Variables
-
-No environment variables are required for this project. Image sources use external URLs configured in `next.config.ts`.
-
-## Browser Support
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-
-WebGL features require WebGL 1.0 support.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Standards
-
-- Use TypeScript for all new code
-- Run `pnpm lint` before committing
-- Run `pnpm format` to format code
-- Add proper type definitions
-- Use `memo()` for all components
-- Include `displayName` for memoized components
-
-## License
-
-[MIT License](LICENSE)
-
-## Credits
-
-[Cinewex Team](https://cinewex.com)
+## Project structure
+y
