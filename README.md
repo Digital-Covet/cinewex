@@ -21,7 +21,7 @@ The page is built as one continuous scroll "film": a letterboxed opening, a scro
 - **Cinematic hero** — letterbox bars open as you scroll while the headline rises out of masked lines.
 - **Scroll-driven premise** — the statement grades from shadow to full exposure word by word, with a drifting image strip.
 - **Before/after comparison** — `RealitySlider` contrasts legacy production with the Cinewex pipeline. Supports pointer drag, arrow keys, `Home`/`End`, and plays a one-time demo sweep on first view.
-- **Pinned services reel** — on desktop, scrolling steps through the four service offerings while the background still swaps behind them.
+- **Services reel** — on desktop, scrolling steps through the four service offerings; selecting or focusing an offering also changes the background preview.
 - **Horizontal workflow track** — the three process steps (Neural Brief → Visual Sculpting → Final Delivery) scroll sideways on desktop, with a progress bar.
 - **Delivery reel** — the final workflow card streams a finished ad from ImageKit, playing only while in view.
 - **Tools marquee** — an infinite logo row that speeds up with scroll velocity and settles back to its base pace.
@@ -44,7 +44,7 @@ The page is built as one continuous scroll "film": a letterboxed opening, a scro
 
 ## Requirements
 
-- **Node.js 20.9.0 or newer** — the minimum declared by Next.js 16.
+- **Node.js 20.9.0 or newer** — the minimum required by Next.js 16. Use a currently supported Node.js LTS release for development and deployment; Node.js 20 reached end of life in March 2026.
 - **pnpm 9+** — the repo ships a v9 `pnpm-lock.yaml` and a `pnpm-workspace.yaml`.
 - A modern browser; the site relies on `svh` units, CSS `clip-path`, and the Intersection Observer API.
 
@@ -85,7 +85,7 @@ There is no test suite configured. Type errors surface during `pnpm build`.
 
 ## Configuration
 
-No environment variables are required. The site is entirely static: the Tally form and ImageKit delivery endpoint are public URLs compiled into the bundle.
+No environment variables are required. The Tally form URL and ImageKit delivery endpoint are public constants in `src/constants/landing.ts`.
 
 ### Content and links
 
@@ -115,7 +115,7 @@ Images are served locally from `public/`:
 | `public/storyboards/` | Workflow step previews |
 | `public/tools/` | Tool marquee logos |
 
-The delivery video is **not** in `public/`. `WORKFLOW_STEPS[2].video` is `/final_ai_video.mp4`, resolved against `IMAGEKIT_URL_ENDPOINT` (`https://ik.imagekit.io/nyfnukger`) by the `ImageKitProvider` in `src/components/landing/index.tsx`. To swap the reel, upload a new file to that ImageKit account or change the endpoint and relative path.
+The delivery video is **not** in `public/`. `WORKFLOW_STEPS[2].video` is `/final_ai_video.mp4`, resolved against `IMAGEKIT_URL_ENDPOINT` (`https://ik.imagekit.io/nyfnukger`) by the `ImageKitProvider` in `src/components/landing/index.tsx`. The video plays while its card is in view and pauses when it leaves view. To swap the reel, upload a new file to that ImageKit account or change the endpoint and relative path.
 
 `next.config.ts` allows remote images from any HTTPS hostname, so a remote image URL can be used without further config.
 
