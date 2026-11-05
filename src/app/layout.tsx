@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const bricolage = Bricolage_Grotesque({
+const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
+
+const spaceSans = Space_Grotesk({
+  variable: "--font-space",
   subsets: ["latin"],
-  variable: "--font-bricolage",
 });
 
-const inter = Inter({
-  subsets: ["latin"],
+const interSans = Inter({
   variable: "--font-inter",
-});
-
-const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-jetbrains",
 });
 
 export const metadata: Metadata = {
@@ -32,14 +29,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(
-        "antialiased",
-        bricolage.variable,
-        inter.variable,
-        jetbrains.variable,
-      )}
+      className={cn("antialiased", spaceSans.variable, interSans.variable, "font-mono", jetbrainsMono.variable)}
     >
-      <body className="min-h-screen block isolate">{children}</body>
+      <body className="min-h-screen block">{children}</body>
     </html>
   );
 }

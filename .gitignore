@@ -43,6 +43,3 @@ next-env.d.ts
 # repomix
 repomix-output.*
 repomix.config.json
-
-# local tooling config
-.claude/
