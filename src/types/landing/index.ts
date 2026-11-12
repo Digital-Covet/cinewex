@@ -29,8 +29,7 @@ export interface WorkflowStep {
 export interface OrbConfig {
   readonly width: string;
   readonly height: string;
-  readonly color: string;
-  readonly blur: string;
+  readonly gradient: string;
 }
 
 export interface NavigationLink {

@@ -74,7 +74,7 @@ export const RealitySliderSection = memo(() => {
 
   return (
     <section
-      className="h-screen bg-black overflow-hidden flex flex-col relative"
+      className="deferred-section h-screen bg-black overflow-hidden flex flex-col relative"
       id="advantage"
     >
       <div
@@ -106,7 +106,7 @@ export const RealitySliderSection = memo(() => {
           className="absolute inset-0 flex items-center justify-end px-4 sm:px-6 md:px-12 lg:px-32 overflow-hidden transition-opacity duration-300 md:opacity-100"
           style={{
             clipPath: `inset(0 0 0 ${position}%)`,
-            willChange: "clip-path",
+            willChange: isDragging ? "clip-path" : undefined,
             opacity: modernOpacity,
           }}
         >
@@ -117,7 +117,7 @@ export const RealitySliderSection = memo(() => {
             fill
             className="object-cover object-center"
             sizes="100vw"
-            priority
+            quality={60}
             draggable={false}
           />
           {}
@@ -135,7 +135,7 @@ export const RealitySliderSection = memo(() => {
               {ADVANTAGE_FEATURES.map((feature, index) => (
                 <div
                   key={feature.id}
-                  className="backdrop-blur-md bg-white/5 border border-white/10 p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
+                  className="bg-black/35 md:bg-white/5 border border-white/10 md:backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
                   style={{
                     transform: `translateX(${(1 - modernOpacity) * 20 * (index + 1)}px)`,
                   }}
@@ -166,6 +166,7 @@ export const RealitySliderSection = memo(() => {
             fill
             className="object-cover object-center"
             sizes="100vw"
+            quality={60}
             draggable={false}
           />
           {}
@@ -183,7 +184,7 @@ export const RealitySliderSection = memo(() => {
               {LEGACY_CONSTRAINTS.map((constraint, index) => (
                 <div
                   key={constraint.id}
-                  className="backdrop-blur-md bg-white/5 border border-white/10 p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
+                  className="bg-black/35 md:bg-white/5 border border-white/10 md:backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-lg transform transition-transform duration-300"
                   style={{
                     transform: `translateX(-${(1 - legacyOpacity) * 20 * (index + 1)}px)`,
                   }}

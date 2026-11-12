@@ -5,7 +5,7 @@ import { AmbientOrb } from "../common/AmbientOrb";
 export const CTASection = memo(() => {
   return (
     // Removed Footer from here ↓
-    <section className="relative min-h-screen flex flex-col overflow-hidden">
+    <section className="deferred-section relative min-h-screen flex flex-col overflow-hidden">
       <AmbientOrb
         position="center"
         color="cyan"

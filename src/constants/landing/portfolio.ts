@@ -22,8 +22,7 @@ export const PORTFOLIO_ITEMS: readonly PortfolioItem[] = [
     title: "ai social media ads",
     backgroundId: "bg-lumina",
     hoverColor: "cyan",
-    imagePath:
-      "https://zeely.ai/blog/wp-content/uploads/2025/12/social-media-campaign-examples-optimized.jpg",
+    imagePath: "/portfolio/ai_social_media_ads.webp",
     backgroundColor: "#00363d",
   },
   {

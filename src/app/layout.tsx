@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 const spaceSans = Space_Grotesk({
   variable: "--font-space",
@@ -30,7 +33,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("antialiased", spaceSans.variable, interSans.variable, "font-mono", jetbrainsMono.variable)}
+      className={cn(
+        "antialiased",
+        spaceSans.variable,
+        interSans.variable,
+        "font-mono",
+        jetbrainsMono.variable,
+      )}
     >
       <body className="min-h-screen block">
         <noscript>
@@ -43,7 +52,7 @@ export default function RootLayout({
           />
         </noscript>
         {children}
-        <Script id="gtm-init" strategy="afterInteractive">
+        <Script id="gtm-init" strategy="lazyOnload">
           {`window.dataLayer = window.dataLayer || [];
 window.dataLayer.push({'gtm.start': new Date().getTime(),event:'gtm.js'});
 function gtag(){dataLayer.push(arguments);}
@@ -52,7 +61,7 @@ gtag('js', new Date());`}
         <Script
           id="gtm"
           src="https://www.googletagmanager.com/gtm.js?id=GTM-NB9BCKRV"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>

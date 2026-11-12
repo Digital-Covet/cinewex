@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { lazy, Suspense, useRef } from "react";
+import { lazy, Suspense } from "react";
 import { Footer } from "./common/Footer";
 import { Navigation } from "./common/Navigation";
 import HeadlineSection from "./sections/HeadlineSection";
@@ -37,32 +37,36 @@ const CTASection = lazy(() =>
   })),
 );
 
-const LoadingFallback: React.FC = () => (
-  <div className="min-h-screen flex items-center justify-center bg-[#0A0A0C]">
-    <div className="w-12 h-12 border-4 border-cyan-400/20 border-t-cyan-400 rounded-full animate-spin" />
-  </div>
-);
+const SectionFallback = ({
+  className = "min-h-screen",
+}: {
+  readonly className?: string;
+}) => <div className={`${className} bg-[#0A0A0C]`} aria-hidden="true" />;
 
 const CinewexLanding: React.FC = () => {
-  const mainRef = useRef<HTMLElement>(null);
-
   return (
-    // Fix: Changed from h-screen to min-h-screen. The page should naturally flow, not be forced to exactly 100vh
     <div className="selection:bg-primary-container selection:text-on-primary-container flex flex-col min-h-screen">
       <Navigation />
-      {/* Fix: Removed h-screen behavior — main should flow naturally, not be constrained to viewport */}
-      <main ref={mainRef} className="flex-1">
+      <main className="flex-1">
         <HeroSection />
-        <Suspense fallback={<LoadingFallback />}>
-          <HeadlineSection />
+        <HeadlineSection />
+        <Suspense fallback={<SectionFallback />}>
           <RealitySliderSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
           <PortfolioSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
           <WorkflowSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback className="min-h-[60vh]" />}>
           <TestimonialsSection />
+        </Suspense>
+        <Suspense fallback={<SectionFallback />}>
           <CTASection />
-          <Footer />
         </Suspense>
       </main>
+      <Footer />
     </div>
   );
 };

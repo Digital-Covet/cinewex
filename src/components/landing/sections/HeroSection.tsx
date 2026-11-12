@@ -1,12 +1,26 @@
+"use client";
+
 import { ChevronsDown } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { memo } from "react";
-import Orb from "@/components/ui/Orb";
+
+const Orb = dynamic(() => import("@/components/ui/Orb"), {
+  ssr: false,
+  loading: () => null,
+});
 
 export const HeroSection = memo(() => {
   return (
     <section className="relative min-h-dvh flex items-center justify-center overflow-hidden pt-20">
-      {/* Changed: Added explicit w-full h-full to ensure Orb container has defined dimensions */}
+      {/* Cheap painted fallback underneath the WebGL orb */}
+      <div
+        className="absolute inset-0 w-full h-full"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, rgba(120, 82, 210, 0.35) 0%, rgba(36, 28, 70, 0.18) 35%, transparent 65%)",
+        }}
+      />
       <div className="absolute inset-0 w-full h-full">
         <Orb
           hoverIntensity={0.42}

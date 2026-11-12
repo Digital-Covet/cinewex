@@ -1,4 +1,10 @@
-import { type RefObject, useCallback, useRef, useState } from "react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { SLIDER_CONSTRAINTS } from "@/constants/landing/animations";
 import { clamp } from "@/utils/landing/math";
 
@@ -22,11 +28,16 @@ export const useSliderPosition = (
   // Refs for tracking swipe intent
   const startPos = useRef<{ x: number; y: number } | null>(null);
   const intent = useRef<"horizontal" | "vertical" | null>(null);
+  const rectRef = useRef<DOMRect | null>(null);
+  const pendingPosition = useRef<number | null>(null);
+  const frameRef = useRef<number | null>(null);
 
   const calculatePosition = useCallback(
     (clientX: number): number => {
-      if (!sliderRef.current) return SLIDER_CONSTRAINTS.DEFAULT_POSITION;
-      const rect = sliderRef.current.getBoundingClientRect();
+      const rect =
+        rectRef.current ?? sliderRef.current?.getBoundingClientRect() ?? null;
+      if (!rect) return SLIDER_CONSTRAINTS.DEFAULT_POSITION;
+
       const rawPosition = ((clientX - rect.left) / rect.width) * 100;
       return clamp(
         rawPosition,
@@ -37,22 +48,48 @@ export const useSliderPosition = (
     [sliderRef],
   );
 
+  const schedulePosition = useCallback(
+    (clientX: number) => {
+      pendingPosition.current = calculatePosition(clientX);
+      if (frameRef.current !== null) return;
+
+      frameRef.current = requestAnimationFrame(() => {
+        frameRef.current = null;
+        if (pendingPosition.current !== null) {
+          setPosition(pendingPosition.current);
+          pendingPosition.current = null;
+        }
+      });
+    },
+    [calculatePosition],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+      }
+    };
+  }, []);
+
   const handlePointerDown = useCallback(
     (e: React.PointerEvent) => {
+      rectRef.current = sliderRef.current?.getBoundingClientRect() ?? null;
+
       // For mice, intent is instantly horizontal (click + drag).
       if (e.pointerType === "mouse") {
         e.preventDefault();
         (e.target as Element).setPointerCapture(e.pointerId);
         setIsDragging(true);
         intent.current = "horizontal";
-        setPosition(calculatePosition(e.clientX));
+        schedulePosition(e.clientX);
       } else {
         // For touch/pen, record start position without preventing native scroll yet
         startPos.current = { x: e.clientX, y: e.clientY };
         intent.current = null;
       }
     },
-    [calculatePosition],
+    [schedulePosition, sliderRef],
   );
 
   const handlePointerMove = useCallback(
@@ -71,7 +108,7 @@ export const useSliderPosition = (
             intent.current = "horizontal";
             setIsDragging(true);
             (e.target as Element).setPointerCapture(e.pointerId);
-            setPosition(calculatePosition(e.clientX));
+            schedulePosition(e.clientX);
           } else {
             intent.current = "vertical"; // Browser will handle vertical native scroll
           }
@@ -81,10 +118,10 @@ export const useSliderPosition = (
       if (intent.current === "horizontal" || isDragging) {
         // Use cancelable check to avoid passive event listener warnings
         if (e.cancelable) e.preventDefault();
-        setPosition(calculatePosition(e.clientX));
+        schedulePosition(e.clientX);
       }
     },
-    [isDragging, calculatePosition],
+    [isDragging, schedulePosition],
   );
 
   const handlePointerUp = useCallback(
@@ -97,6 +134,17 @@ export const useSliderPosition = (
       ) {
         setPosition(calculatePosition(e.clientX));
       }
+
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+      // Apply the most recent pending value so the final drag position sticks.
+      if (pendingPosition.current !== null) {
+        setPosition(pendingPosition.current);
+        pendingPosition.current = null;
+      }
+      rectRef.current = null;
 
       setIsDragging(false);
       intent.current = null;

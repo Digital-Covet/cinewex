@@ -1,53 +1,87 @@
 import Image from "next/image";
-import { memo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { PORTFOLIO_ITEMS } from "@/constants/landing/portfolio";
 import { usePortfolioBackgrounds } from "@/hooks/landing/usePortfolioBackgrounds";
-import type { BackgroundId } from "@/types/landing";
 import { PortfolioItem } from "../common/PortfolioItem";
 
 const PortfolioBackground = memo<{
-  readonly id: BackgroundId;
+  readonly id: string;
   readonly isVisible: boolean;
   readonly imagePath: string;
   readonly backgroundColor: string;
-}>(({ id, isVisible, imagePath, backgroundColor }) => (
-  <div
-    className={`portfolio-bg absolute inset-0 transition-opacity duration-600 ${
-      isVisible ? "opacity-100" : "opacity-0"
-    }`}
-    style={{ backgroundColor }}
-  >
-    <Image
-      alt={`${id} background`}
-      className="w-full h-full object-cover opacity-40 mix-blend-screen"
-      src={imagePath}
-      width={2688}
-      height={1568}
-    />
-  </div>
-));
+}>(({ id, isVisible, imagePath, backgroundColor }) => {
+  const [hasEntered, setHasEntered] = useState(false);
+
+  useEffect(() => {
+    if (!isVisible) {
+      setHasEntered(false);
+      return;
+    }
+
+    // Flip on the next frame so the freshly mounted layer fades in.
+    const frame = requestAnimationFrame(() => setHasEntered(true));
+    return () => cancelAnimationFrame(frame);
+  }, [isVisible]);
+
+  return (
+    <div
+      className={`portfolio-bg absolute inset-0 transition-opacity duration-700 ease-out ${
+        hasEntered ? "opacity-100" : "opacity-0"
+      }`}
+      style={{ backgroundColor }}
+    >
+      <Image
+        alt={`${id} background`}
+        className="w-full h-full object-cover opacity-40 mix-blend-screen"
+        src={imagePath}
+        width={2688}
+        height={1568}
+        sizes="100vw"
+        quality={50}
+        loading="lazy"
+      />
+    </div>
+  );
+});
 
 PortfolioBackground.displayName = "PortfolioBackground";
 
 export const PortfolioSection = memo(() => {
-  const { backgrounds, show, hide } = usePortfolioBackgrounds();
+  const { active, previous, show, clear } = usePortfolioBackgrounds();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const element = sectionRef.current;
+    if (!element) return;
+
+    element.addEventListener("mouseleave", clear);
+    return () => element.removeEventListener("mouseleave", clear);
+  }, [clear]);
 
   return (
     <section
-      className="relative min-h-dvh h-auto md:h-screen md:min-h-screen flex items-center overflow-hidden py-16 md:py-32"
+      ref={sectionRef}
+      className="deferred-section relative min-h-dvh h-auto md:h-screen md:min-h-screen flex items-center overflow-hidden py-16 md:py-32"
       id="services"
     >
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-[#0A0A0C]" />
-        {PORTFOLIO_ITEMS.map((item) => (
-          <PortfolioBackground
-            key={item.backgroundId}
-            id={item.backgroundId}
-            isVisible={backgrounds[item.backgroundId]}
-            imagePath={item.imagePath}
-            backgroundColor={item.backgroundColor}
-          />
-        ))}
+        {PORTFOLIO_ITEMS.map((item) => {
+          const isActive = active === item.backgroundId;
+          const isPrevious = previous === item.backgroundId;
+
+          if (!isActive && !isPrevious) return null;
+
+          return (
+            <PortfolioBackground
+              key={item.backgroundId}
+              id={item.backgroundId}
+              isVisible={isActive}
+              imagePath={item.imagePath}
+              backgroundColor={item.backgroundColor}
+            />
+          );
+        })}
         <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black/50" />
       </div>
 
@@ -63,12 +97,7 @@ export const PortfolioSection = memo(() => {
 
         <div className="flex flex-col space-y-0 items-start">
           {PORTFOLIO_ITEMS.map((item) => (
-            <PortfolioItem
-              key={item.id}
-              item={item}
-              onMouseEnter={show}
-              onMouseLeave={hide}
-            />
+            <PortfolioItem key={item.id} item={item} onMouseEnter={show} />
           ))}
         </div>
       </div>

@@ -13,20 +13,20 @@ export const ORB_CONFIGS = {
   STEP_0: {
     width: "w-[800px]",
     height: "h-[800px]",
-    color: "bg-cyan-500/10",
-    blur: "blur-[150px]",
+    gradient:
+      "radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(6, 182, 212, 0.07) 38%, transparent 70%)",
   },
   STEP_1: {
     width: "w-[900px]",
     height: "h-[900px]",
-    color: "bg-purple-500/10",
-    blur: "blur-[180px]",
+    gradient:
+      "radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, rgba(168, 85, 247, 0.07) 38%, transparent 70%)",
   },
   STEP_2: {
     width: "w-[1000px]",
     height: "h-[1000px]",
-    color: "bg-cyan-500/20",
-    blur: "blur-[200px]",
+    gradient:
+      "radial-gradient(circle, rgba(6, 182, 212, 0.22) 0%, rgba(6, 182, 212, 0.09) 40%, transparent 72%)",
   },
 } as const;
 

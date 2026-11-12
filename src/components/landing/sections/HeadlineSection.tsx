@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DecryptedText from "@/components/ui/DecryptedText";
+import { useInView } from "@/hooks/useInView";
 
 const images = [
   "/headline/1.webp",
@@ -15,14 +16,18 @@ const images = [
 
 export default function HeadlineSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef);
 
   useEffect(() => {
+    if (!isInView) return;
+
     const interval = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % images.length);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView]);
 
   const getImageClasses = (index: number) => {
     const total = images.length;
@@ -59,8 +64,9 @@ export default function HeadlineSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="headline-section"
-      className="min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950"
+      className="deferred-section min-h-screen lg:h-screen flex items-center py-12 md:py-16 px-4 md:px-8 mb-8 shrink-0 bg-zinc-950"
     >
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
         {/* Left Column */}
@@ -91,13 +97,16 @@ export default function HeadlineSection() {
         <div className="relative h-80 sm:h-96 md:h-112 lg:h-125 w-full flex items-center justify-center overflow-hidden order-1 lg:order-2 mb-8 lg:mb-0">
           {images.map((src, index) => (
             <Image
-              key={index}
+              key={src}
               src={src}
               alt={`Creative visualization ${index + 1}`}
               className={getImageClasses(index)}
               width={1696}
               height={2528}
-              priority={index <= 2}
+              sizes="(max-width: 768px) 192px, 256px"
+              quality={60}
+              preload={index === 0}
+              loading={index === 0 ? undefined : "lazy"}
             />
           ))}
         </div>

@@ -12,7 +12,7 @@ export const Navigation = memo(() => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-100 bg-[#0A0A0C]/40 backdrop-blur-lg border-b border-white/10">
+    <nav className="fixed top-0 left-0 right-0 z-100 bg-[#0A0A0C]/90 md:bg-[#0A0A0C]/40 md:backdrop-blur-lg border-b border-white/10">
       <div className="flex justify-between items-center w-full px-8 py-4">
         <Link href="/" onClick={handleLogoClick}>
           <Image
@@ -20,7 +20,7 @@ export const Navigation = memo(() => {
             alt="Cinewex Logo"
             width={100}
             height={50}
-            priority
+            preload
           />
         </Link>
         <NavigationMenu.Root className="hidden md:flex gap-10 items-center">
@@ -28,10 +28,11 @@ export const Navigation = memo(() => {
             {NAVIGATION_LINKS.map((link) => (
               <NavigationMenu.Item key={link.href}>
                 <NavigationMenu.Link
-                  className={`font-headline tracking-tight transition-colors text-sm ${link.isActive
+                  className={`font-headline tracking-tight transition-colors text-sm ${
+                    link.isActive
                       ? "text-white hover:text-cyan-400"
                       : "text-zinc-400 hover:text-white"
-                    }`}
+                  }`}
                   href={link.href}
                 >
                   {link.label}

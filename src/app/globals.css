@@ -140,6 +140,17 @@
   width: var(--position);
 }
 
+/* Deferred rendering for below-the-fold sections */
+@utility deferred-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100dvh;
+}
+
+@utility deferred-section-sm {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 60vh;
+}
+
 /* Portfolio */
 @utility portfolio-item {
   mix-blend-mode: difference;
@@ -194,4 +205,17 @@
 
 @utility animate-reveal {
   animation: fade-in-up 0.8s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-reveal,
+  .animate-bounce,
+  .animate-pulse,
+  .marquee-content {
+    animation: none;
+  }
 }

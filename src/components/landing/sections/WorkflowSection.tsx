@@ -34,12 +34,13 @@ export const WorkflowSection = memo(() => {
   return (
     <div
       id="workflow"
-      className="relative bg-[#0A0A0C] flex flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-12 lg:p-16 overflow-hidden min-h-screen"
+      className="deferred-section relative bg-[#0A0A0C] flex flex-col items-center justify-center px-4 py-8 sm:px-6 sm:py-12 lg:p-16 overflow-hidden min-h-screen"
     >
       {/* Background Glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-1000 ${orbConfig.width} ${orbConfig.height} ${orbConfig.color} ${orbConfig.blur}`}
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-1000 ${orbConfig.width} ${orbConfig.height}`}
+          style={{ background: orbConfig.gradient }}
         />
       </div>
 
@@ -69,9 +70,12 @@ export const WorkflowSection = memo(() => {
         <div className="w-full h-full bg-black rounded-3xl overflow-hidden relative">
           <Carousel setApi={setApi} className="w-full h-full">
             <CarouselContent className="h-full">
-              {WORKFLOW_STEPS.map((step) => (
+              {WORKFLOW_STEPS.map((step, index) => (
                 <CarouselItem key={step.id} className="h-full">
-                  <WorkflowStateCard step={step} />
+                  <WorkflowStateCard
+                    step={step}
+                    isActive={activeStep === index}
+                  />
                 </CarouselItem>
               ))}
             </CarouselContent>

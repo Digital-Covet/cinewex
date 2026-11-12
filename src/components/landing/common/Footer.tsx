@@ -23,9 +23,10 @@ const NAV_LINK_CLASSES =
 // --- Helper Functions ---
 
 const getToggleClassName = (pressed: boolean) =>
-  `${TOGGLE_BASE_CLASSES} ${pressed
-    ? "bg-purple-500 text-white"
-    : "hover:bg-purple-500 hover:text-white"
+  `${TOGGLE_BASE_CLASSES} ${
+    pressed
+      ? "bg-purple-500 text-white"
+      : "hover:bg-purple-500 hover:text-white"
   }`;
 
 const getShareAriaLabel = (isShared: boolean) =>
@@ -50,7 +51,6 @@ export const Footer = memo<FooterProps>(({ className = "" }) => {
             alt="Cinewex Logo"
             width={100}
             height={50}
-            priority
           />
           <p className="text-[10px] tracking-[0.2em] uppercase text-zinc-600">
             Copyright: © 2026 CINEWEX. AI CREATIVE STUDIO FOR BRANDS &

@@ -183,7 +183,16 @@ export default function Orb({
     const container = ctnDom.current;
     if (!container) return;
 
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
+    const getDpr = () => {
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      return Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 1.25);
+    };
+
+    const renderer = new Renderer({
+      alpha: true,
+      premultipliedAlpha: false,
+      antialias: false,
+    });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     container.appendChild(gl.canvas);
@@ -191,7 +200,11 @@ export default function Orb({
     gl.canvas.style.top = "0";
     gl.canvas.style.left = "0";
     gl.canvas.style.display = "block";
+    gl.canvas.style.width = "100%";
+    gl.canvas.style.height = "100%";
+
     const geometry = new Triangle(gl);
+    const backgroundColorVec = hexToVec3(backgroundColor);
     const program = new Program(gl, {
       vertex: vert,
       fragment: frag,
@@ -208,7 +221,7 @@ export default function Orb({
         hover: { value: 0 },
         rot: { value: 0 },
         hoverIntensity: { value: hoverIntensity },
-        backgroundColor: { value: hexToVec3(backgroundColor) },
+        backgroundColor: { value: backgroundColorVec },
       },
     });
 
@@ -216,17 +229,15 @@ export default function Orb({
 
     function resize() {
       if (!container) return;
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = getDpr();
       const width = container.clientWidth;
       const height = container.clientHeight;
-      renderer.setSize(width * dpr, height * dpr);
+      renderer.setSize(
+        Math.max(1, Math.round(width * dpr)),
+        Math.max(1, Math.round(height * dpr)),
+      );
       gl.canvas.style.width = `${width}px`;
       gl.canvas.style.height = `${height}px`;
-      // Ensure canvas doesn't cause layout shifts
-      gl.canvas.style.position = "absolute";
-      gl.canvas.style.top = "0";
-      gl.canvas.style.left = "0";
-      gl.canvas.style.display = "block";
       program.uniforms.iResolution.value.set(
         gl.canvas.width,
         gl.canvas.height,
@@ -241,8 +252,11 @@ export default function Orb({
     let lastTime = 0;
     let currentRot = 0;
     const rotationSpeed = 0.3;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const frameInterval = 1000 / 30;
 
-    // Fix 3 — explicit MouseEvent type on `e` → resolves TS 7006
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -254,11 +268,7 @@ export default function Orb({
       const centerY = height / 2;
       const uvX = ((x - centerX) / size) * 2.0;
       const uvY = ((y - centerY) / size) * 2.0;
-      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
-        targetHover = 1;
-      } else {
-        targetHover = 0;
-      }
+      targetHover = Math.sqrt(uvX * uvX + uvY * uvY) < 0.8 ? 1 : 0;
     };
 
     const handleMouseLeave = () => {
@@ -268,37 +278,56 @@ export default function Orb({
     container.addEventListener("mousemove", handleMouseMove);
     container.addEventListener("mouseleave", handleMouseLeave);
 
-    // Fix 4 — explicit `number` type on rafId → resolves TS 7034 / noImplicitAnyLet
-    let rafId: number;
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        lastTime = performance.now();
+      },
+      { threshold: 0 },
+    );
+    visibilityObserver.observe(container);
 
-    // Fix 5 — explicit `number` type on `t` → resolves TS 7006
-    const update = (t: number) => {
-      rafId = requestAnimationFrame(update);
-      const dt = (t - lastTime) * 0.001;
+    let rafId = 0;
+    let lastRender = 0;
+
+    const renderFrame = (t: number) => {
+      const dt = Math.min((t - lastTime) * 0.001, 0.1);
       lastTime = t;
-      program.uniforms.iTime.value = t * 0.001;
-      program.uniforms.hue.value = hue;
-      program.uniforms.hoverIntensity.value = hoverIntensity;
-      program.uniforms.backgroundColor.value = hexToVec3(backgroundColor);
-      const effectiveHover = forceHoverState ? 1 : targetHover;
-      program.uniforms.hover.value +=
-        (effectiveHover - program.uniforms.hover.value) * 0.1;
-      const isHovering = program.uniforms.hover.value > 0.5;
-      if (rotateOnHover && isHovering) {
+      if (rotateOnHover && program.uniforms.hover.value > 0.5) {
         currentRot += dt * rotationSpeed;
       }
       program.uniforms.rot.value = currentRot;
       renderer.render({ scene: mesh });
+      lastRender = t;
     };
 
-    rafId = requestAnimationFrame(update);
+    if (reduceMotion) {
+      renderFrame(performance.now());
+    } else {
+      const update = (t: number) => {
+        rafId = requestAnimationFrame(update);
+        if (!isVisible || document.hidden) return;
+        if (t - lastRender < frameInterval) return;
+
+        program.uniforms.iTime.value = t * 0.001;
+        const effectiveHover = forceHoverState ? 1 : targetHover;
+        program.uniforms.hover.value +=
+          (effectiveHover - program.uniforms.hover.value) * 0.1;
+        renderFrame(t);
+      };
+      rafId = requestAnimationFrame(update);
+    }
 
     return () => {
       cancelAnimationFrame(rafId);
+      visibilityObserver.disconnect();
       window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      container.removeChild(gl.canvas);
+      if (gl.canvas.parentNode === container) {
+        container.removeChild(gl.canvas);
+      }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,30 +1,39 @@
 import { useCallback, useState } from "react";
-import type { BackgroundId, PortfolioBackgroundState } from "@/types/landing";
+import type { BackgroundId } from "@/types/landing";
 
 interface UsePortfolioBackgroundsReturn {
-  backgrounds: PortfolioBackgroundState;
+  active: BackgroundId | null;
+  previous: BackgroundId | null;
   show: (bgId: BackgroundId) => void;
-  hide: (bgId: BackgroundId) => void;
+  clear: () => void;
 }
 
-const INITIAL_STATE: PortfolioBackgroundState = {
-  "bg-neon": false,
-  "bg-aura": false,
-  "bg-lumina": false,
-  "bg-orion": false,
-} as const;
+interface BackgroundState {
+  active: BackgroundId | null;
+  previous: BackgroundId | null;
+}
+
+const INITIAL_STATE: BackgroundState = {
+  active: null,
+  previous: null,
+};
 
 export const usePortfolioBackgrounds = (): UsePortfolioBackgroundsReturn => {
-  const [backgrounds, setBackgrounds] =
-    useState<PortfolioBackgroundState>(INITIAL_STATE);
+  const [state, setState] = useState<BackgroundState>(INITIAL_STATE);
 
   const show = useCallback((bgId: BackgroundId): void => {
-    setBackgrounds((prev) => ({ ...prev, [bgId]: true }));
+    setState((prev) => {
+      if (prev.active === bgId) return prev;
+      return { active: bgId, previous: prev.active };
+    });
   }, []);
 
-  const hide = useCallback((bgId: BackgroundId): void => {
-    setBackgrounds((prev) => ({ ...prev, [bgId]: false }));
+  const clear = useCallback((): void => {
+    setState((prev) => {
+      if (prev.active === null) return prev;
+      return { active: null, previous: prev.active };
+    });
   }, []);
 
-  return { backgrounds, show, hide };
+  return { active: state.active, previous: state.previous, show, clear };
 };

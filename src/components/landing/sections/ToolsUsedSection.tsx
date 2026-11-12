@@ -23,7 +23,7 @@ export const ToolsUsedSection = memo(() => {
   );
 
   return (
-    <section className="min-h-[60vh] py-24 bg-zinc-950/50 overflow-hidden border-y border-white/5 flex flex-col items-center justify-center">
+    <section className="deferred-section-sm min-h-[60vh] py-24 bg-zinc-950/50 overflow-hidden border-y border-white/5 flex flex-col items-center justify-center">
       <div className="max-w-7xl mx-auto px-8 w-full">
         <div className="text-center mb-16">
           <p className="font-bold text-[10px] tracking-[0.3em] text-cyan-400 uppercase mb-4">
